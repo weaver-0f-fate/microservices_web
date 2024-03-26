@@ -4,14 +4,14 @@ EXPOSE 80
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["Services/Events/API/Events.API.csproj", "Services/Events/API/"]
-COPY ["Services/Events/Infrastructure/Events.Infrastructure.csproj", "Services/Events/Infrastructure/"]
-COPY ["Services/Events/Application/Events.Application.csproj", "Services/Events/Application/"]
-COPY ["Services/Events/Application.Core/Events.Application.Core.csproj", "Services/Events/Application.Core/"]
-COPY ["Services/Events/Domain/Events.Domain.csproj", "Services/Events/Domain/"]
-RUN dotnet restore "Services/Events/API/Events.API.csproj"
+COPY ["Services/Events/Events.API/Events.API.csproj", "Services/Events/Events.API/"]
+COPY ["Services/Events/Events.Infrastructure/Events.Infrastructure.csproj", "Services/Events/Events.Infrastructure/"]
+COPY ["Services/Events/Events.Application/Events.Application.csproj", "Services/Events/Events.Application/"]
+COPY ["Services/Events/Events.Application.Core/Events.Application.Core.csproj", "Services/Events/Events.Application.Core/"]
+COPY ["Services/Events/Events.Domain/Events.Domain.csproj", "Services/Events/Events.Domain/"]
+RUN dotnet restore "Services/Events/Events.API/Events.API.csproj"
 COPY . .
-WORKDIR "/src/Services/Events/API"
+WORKDIR "/src/Services/Events/Events.API"
 RUN dotnet build "Events.API.csproj" -c Release -o /app/build
 
 FROM build AS publish
