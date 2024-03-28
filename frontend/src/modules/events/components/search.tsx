@@ -15,12 +15,14 @@ const Search = (props: SearchProps) => {
     const setEventUuid = useSetEventUuid();
 
     useEffect(() => {
-        searchEvents(searchString)
-            .then(result => result.json())
-            .then((data: SearchEvent[]) => {
-                setOptions(data);
-            })
-            .catch(error => console.log(error));
+        if(searchString){
+            searchEvents(searchString)
+                .then(result => result.json())
+                .then((data: SearchEvent[]) => {
+                    setOptions(data);
+                })
+                .catch(error => console.log(error));
+        }
     }, [searchString])
 
     const handleSearch = (newValue: string) => {

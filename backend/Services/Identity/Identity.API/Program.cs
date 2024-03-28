@@ -29,6 +29,7 @@ try
         cfg.RegisterServicesFromAssemblyContaining(typeof(Assembly));
         cfg.RegisterServicesFromAssemblyContaining(typeof(Program));
     });
+    ConfigureCors(services);
 
     var app = builder.Build();
 
@@ -56,6 +57,19 @@ finally
     Log.CloseAndFlush();
 }
 
+static void ConfigureCors(IServiceCollection services)
+{
+    services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(builder =>
+        {
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+    });
+}
 static void ConfigureContainer(ServiceRegistry services)
 {
     services.Scan(scan => { scan.TheCallingAssembly(); scan.WithDefaultConventions(); });

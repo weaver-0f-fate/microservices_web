@@ -1,5 +1,16 @@
 services:
 
+ identityapi:
+  image: identity
+  build: 
+   context: ./backend
+   dockerfile: ./Services/Identity/Identity.API/Dockerfile
+  ports:
+   - 7202:80
+  environment:
+   ASPNETCORE_ENVIRONMENT: "Docker"
+   ASPNETCORE_URLS: "http://+:80"
+
  eventsapi:
   image: events
   build: 

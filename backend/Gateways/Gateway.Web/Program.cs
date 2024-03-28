@@ -31,7 +31,8 @@ try
     // Add & configure services
     var services = builder.Services;
 
-    ConfigureAuth(services, builder.Configuration);
+    ConfigureCors(services);
+    //ConfigureAuth(services, builder.Configuration);
     services.AddOcelot();
 
 
@@ -66,6 +67,20 @@ finally
 static void ConfigureContainer(ServiceRegistry services)
 {
     services.Scan(scan => { scan.AssemblyContainingType<Assembly>(); scan.WithDefaultConventions(); });
+}
+
+static void ConfigureCors(IServiceCollection services)
+{
+    services.AddCors(options =>
+    {
+        options.AddDefaultPolicy(builder =>
+        {
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod();
+        });
+    });
 }
 
 static void ConfigureAuth(IServiceCollection services, IConfiguration config)

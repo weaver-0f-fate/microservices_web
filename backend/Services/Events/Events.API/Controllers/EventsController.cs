@@ -14,9 +14,13 @@ public class EventsController : ApiController
     public EventsController(IMediator mediator) : base(mediator) { }
 
     [HttpGet]
-    [Authorize(Roles = "Guest, User, Instructor, Admin")]
+    //[Authorize(Roles = "Guest, User, Instructor, Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Get([FromQuery] string? category, [FromQuery] string? place, [FromQuery] string? time, CancellationToken cancellationToken)
+    public async Task<IActionResult> Get(
+        [FromQuery] string? category, 
+        [FromQuery] string? place, 
+        [FromQuery] string? time, 
+        CancellationToken cancellationToken)
     {
         var timeFilter = TimeSpan.TryParse(time, CultureInfo.CurrentCulture, out var t);
         var result = await Mediator.Send(new GetEventsRequest
@@ -29,7 +33,7 @@ public class EventsController : ApiController
     }
 
     [HttpGet("search")]
-    [Authorize(Roles = "Guest, User, Instructor, Admin")]
+    //[Authorize(Roles = "Guest, User, Instructor, Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> SearchEvents([FromQuery] string? searchString, CancellationToken cancellationToken)
     {
@@ -41,7 +45,7 @@ public class EventsController : ApiController
     }
 
     [HttpPost]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> Post([FromBody] CreateEventRequest request, CancellationToken cancellationToken)
     {

@@ -53,11 +53,12 @@ type FetchOptions = {
     method: string,
     headers?: any,
     responseType?: FetchResponseTypes,
-    query?: string,
+    query?: {},
     body?: FormData | string | any,
     crossDomain?: boolean,
     nokNotification?: string,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    mode?: any
 }
 
 declare var AbortSignal: {
@@ -93,7 +94,8 @@ const useFetch = () => {
             },
             responseType: responseType,
             method: method,
-            crossDomain:true
+            crossDomain:true,
+            mode: 'no-cors'
         };
 
         if (body instanceof FormData) {
@@ -159,12 +161,13 @@ const useFetch = () => {
     }, [notify]);
 }
 
-const fetchFromApi = (path:string, options:FetchOptions, responseType:FetchResponseTypes) => {
+const fetchFromApi = (path: string, options: FetchOptions, responseType: FetchResponseTypes) => {
     //return fetch(`${process.env.REACT_APP_API}${path}${options.query && Object.keys(options.query).length !== 0 ? `?${stringify(options.query)}` : ''}`, options)
     return fetch(`${path}${options.query && Object.keys(options.query).length !== 0 ? `?${stringify(options.query)}` : ''}`, options)
         .then(responseOk)
         .then(async response => {
             try {
+                console.log('test')
                 switch (responseType) {
                     case FetchResponseTypes.BLOB:
                         return response.blob();

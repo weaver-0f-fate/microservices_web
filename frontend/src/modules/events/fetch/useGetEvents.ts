@@ -7,7 +7,12 @@ export const useGetEvents = () => {
     
     return useCallback(
         (category?: string, place?: string, date?: Date) => 
-            fetch(`http://localhost:7201/api/events?category=${category}&place=${place}&time=${date ? formatTime(date) : ''}`, {
+            fetch(`http://localhost:7201/api/events`, {
                 method: 'GET',
+                query: {
+                    category,
+                    place,
+                    time: date ? formatTime(date) : ''
+                }
         }), [])
 }
