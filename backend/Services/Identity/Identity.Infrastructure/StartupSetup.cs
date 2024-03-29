@@ -8,7 +8,7 @@ namespace Identity.Infrastructure;
 
 public static class StartupSetup
 {
-    public static async Task AddDbContext(this IServiceCollection services, string connectionString, IConfiguration configuration)
+    public static async Task AddDbContext(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(connectionString, opt =>
@@ -58,11 +58,11 @@ public static class StartupSetup
         };
 
         var userPassword = configuration.GetSection("AppSettings")["UserPassword"];
-        var user = await userManager.FindByEmailAsync(configuration.GetSection("AppSettings")["UserEmail"]);
+        var user = await userManager.FindByEmailAsync(configuration.GetSection("AppSettings")["UserEmail"]!);
 
         if (user == null)
         {
-            var createPowerUser = await userManager.CreateAsync(poweruser, userPassword);
+            var createPowerUser = await userManager.CreateAsync(poweruser, userPassword!);
             if (createPowerUser.Succeeded)
             {
                 //here we tie the new user to the "Admin" role 

@@ -9,6 +9,7 @@ using Lamar.Microsoft.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
+using Events.Application.Core.Profiles;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Event = Events.Domain.Aggregates.Event;
 
@@ -26,10 +27,10 @@ try
     services.AddControllers(options =>
         {
             options.Filters.Add<NotFoundExceptionFilterAttribute>();
-        })
-        .AddNewtonsoftJson();
+        }).AddNewtonsoftJson();
 
-    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    services.AddAutoMapper(typeof(EventProfile));
+
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     await services.AddDbContext(connectionString);

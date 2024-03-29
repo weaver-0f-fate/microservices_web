@@ -8,11 +8,10 @@ namespace Events.Application.Tests.Requests.Events;
 [TestClass]
 public class SearchEventsHandlerTests
 {
-    private SearchEventsHandler _handler;
-    private Mock<ISearchEvents> _searchEventsMock;
+    private readonly SearchEventsHandler _handler;
+    private readonly Mock<ISearchEvents> _searchEventsMock;
 
-    [TestInitialize]
-    public void Initialize()
+    public SearchEventsHandlerTests()
     {
         _searchEventsMock = new Mock<ISearchEvents>();
         _handler = new SearchEventsHandler(_searchEventsMock.Object);

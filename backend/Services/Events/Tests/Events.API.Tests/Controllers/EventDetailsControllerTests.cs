@@ -17,14 +17,14 @@ using Moq;
 [TestClass]
 public class EventDetailsControllerTests
 {
-    private EventDetailsController _controller;
-    private Mock<IMediator> _mediatorMock;
+    private readonly EventDetailsController _controller;
+    private readonly Mock<IMediator> _mediatorMock;
 
-    [TestInitialize]
-    public void Initialize()
+    public EventDetailsControllerTests()
     {
         _mediatorMock = new Mock<IMediator>();
         _controller = new EventDetailsController(_mediatorMock.Object);
+        
     }
 
     [TestMethod]
@@ -80,7 +80,7 @@ public class EventDetailsControllerTests
     {
         // Arrange
         var uuid = Guid.NewGuid();
-        JsonPatchDocument<UpdateEventDto> patchDoc = null;
+        JsonPatchDocument<UpdateEventDto>? patchDoc = null;
 
         // Act
         var result = await _controller.Patch(uuid, patchDoc, CancellationToken.None) as BadRequestResult;

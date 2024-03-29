@@ -18,7 +18,7 @@ try
     // Add services to the container.
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
                            ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    await services.AddDbContext(connectionString, builder.Configuration);
+    await services.AddDbContext(connectionString);
 
     services.AddControllers();
     services.AddEndpointsApiExplorer();

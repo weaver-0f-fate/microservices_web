@@ -64,6 +64,8 @@ finally
     Log.CloseAndFlush();
 }
 
+return;
+
 static void ConfigureContainer(ServiceRegistry services)
 {
     services.Scan(scan => { scan.AssemblyContainingType<Assembly>(); scan.WithDefaultConventions(); });
@@ -86,7 +88,9 @@ static void ConfigureCors(IServiceCollection services)
 static void ConfigureAuth(IServiceCollection services, IConfiguration config)
 {
     var identityUrl = config.GetValue<string>("IdentityUrl");
-    var authenticationProviderKey = "IdentityApiKey";
+    const string authenticationProviderKey = "IdentityApiKey";
+    var audiences = new[] { "events", "notifications", "subscriptions" };
+
 
     services.AddAuthentication()
         .AddJwtBearer(authenticationProviderKey, x =>
@@ -95,7 +99,7 @@ static void ConfigureAuth(IServiceCollection services, IConfiguration config)
             x.RequireHttpsMetadata = false;
             x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
             {
-                ValidAudiences = new[] { "events", "notifications", "subscriptions" }
+                ValidAudiences = audiences
             };
         });
 }

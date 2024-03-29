@@ -1,23 +1,20 @@
 ﻿using Events.API.Controllers;
 using Events.Application.Commands.Events;
 using Events.Application.Requests.Events;
-using Events.Domain.Aggregates;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
-using System.Threading;
 
 namespace Events.API.Tests.Controllers;
 
 [TestClass]
 public class EventsControllerTests
 {
-    private EventsController _controller;
-    private Mock<IMediator> _mediatorMock;
+    private readonly EventsController _controller;
+    private readonly Mock<IMediator> _mediatorMock;
 
-    [TestInitialize]
-    public void Initialize()
+    public EventsControllerTests()
     {
         _mediatorMock = new Mock<IMediator>();
         _controller = new EventsController(_mediatorMock.Object);
@@ -30,7 +27,8 @@ public class EventsControllerTests
         var category = "Category";
         var place = "Place";
         var time = "12:00:00";
-        var expectedResult = new GetEventsResponse { Events = new[] { new EventBaseInfo() } };
+        var events = new[] { new EventBaseInfo() };
+        var expectedResult = new GetEventsResponse { Events = events };
         _mediatorMock.Setup(m => m.Send(It.IsAny<GetEventsRequest>(), CancellationToken.None)).ReturnsAsync(expectedResult);
 
         // Act
@@ -77,14 +75,16 @@ public class EventsControllerTests
     public async Task SearchEvents_ValidSearchString_ReturnsOkResult()
     {
         // Arrange
-        var searchString = "test";
+        const string searchString = "test";
+        var searchEventDtos = new List<SearchEventDto>
+        {
+            new() { Uuid = Guid.NewGuid(), Title= "Event 1" },
+            new() { Uuid = Guid.NewGuid(), Title = "Event 2" }
+        };
+
         var searchEventsResponse = new SearchEventsResponse
         {
-            Events = new List<SearchEventDto>
-            {
-                    new() { Uuid = Guid.NewGuid(), Title= "Event 1" },
-                    new() { Uuid = Guid.NewGuid(), Title = "Event 2" }
-            }
+            Events = searchEventDtos
         };
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<SearchEventsRequest>(), CancellationToken.None))
@@ -106,14 +106,16 @@ public class EventsControllerTests
     public async Task SearchEvents_NullSearchString_ReturnsOkResult()
     {
         // Arrange
-        string searchString = null;
+        string? searchString = null;
+        var searchEventDtos = new List<SearchEventDto>
+        {
+            new() { Uuid = Guid.NewGuid(), Title= "Event 1" },
+            new() { Uuid = Guid.NewGuid(), Title = "Event 2" }
+        };
+
         var searchEventsResponse = new SearchEventsResponse
         {
-            Events = new List<SearchEventDto>
-            {
-                new() { Uuid = Guid.NewGuid(), Title= "Event 1" },
-                new() { Uuid = Guid.NewGuid(), Title = "Event 2" }
-            }
+            Events = searchEventDtos
         };
 
         _mediatorMock.Setup(m => m.Send(It.IsAny<SearchEventsRequest>(), CancellationToken.None))

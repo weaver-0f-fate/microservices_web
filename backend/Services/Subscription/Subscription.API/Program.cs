@@ -29,10 +29,7 @@ try
     services.AddControllers(options =>
     {
         options.Filters.Add<NotFoundExceptionFilterAttribute>();
-    })
-        .AddNewtonsoftJson();
-
-    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    }).AddNewtonsoftJson();
 
     services.AddHttpClient("NotificationHttpClient", httpClient =>
     {

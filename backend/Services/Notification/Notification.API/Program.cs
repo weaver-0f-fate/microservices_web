@@ -30,7 +30,6 @@ try
     })
         .AddNewtonsoftJson();
 
-    services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     services.AddHttpClient("EventsHttpClient", httpClient =>
     {

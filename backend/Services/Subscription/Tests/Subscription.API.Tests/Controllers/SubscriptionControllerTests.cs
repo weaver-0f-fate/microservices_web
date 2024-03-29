@@ -57,7 +57,7 @@ public class SubscriptionControllerTests
         var createdResult = (CreatedResult)result;
         Assert.AreEqual(StatusCodes.Status201Created, createdResult.StatusCode);
 
-        var responseValue = (SubscribeUserResponse)createdResult.Value;
+        var responseValue = (SubscribeUserResponse)createdResult.Value!;
         Assert.IsNotNull(responseValue);
         Assert.AreEqual(expectedResult.SubscriptionUuid, responseValue.SubscriptionUuid);
 
@@ -71,6 +71,6 @@ public class SubscriptionControllerTests
 
         // Verify the constructed resource URI
         var expectedUri = new Uri($"{controllerContext.HttpContext.Request.Scheme}://{controllerContext.HttpContext.Request.Host}/api/subscription/{expectedResult.SubscriptionUuid}");
-        Assert.AreEqual(expectedUri, createdResult.Location);
+        Assert.AreEqual(expectedUri.AbsoluteUri, createdResult.Location);
     }
 }
