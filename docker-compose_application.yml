@@ -1,5 +1,16 @@
 services:
 
+ gateway:
+  image: gateway
+  build: 
+   context: ./backend
+   dockerfile: ./Gateways/Gateway.Web/Dockerfile
+  ports:
+   - 7201:80
+  environment:
+   ASPNETCORE_ENVIRONMENT: "Docker"
+   ASPNETCORE_URLS: "http://+:80"
+
  identityapi:
   image: identity
   build: 
