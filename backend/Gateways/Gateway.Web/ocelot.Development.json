@@ -13,7 +13,7 @@
           "Port": 7202
         }
       ],
-      "UpstreamPathTemplate": "/identity/{everything}",
+      "UpstreamPathTemplate": "/api/identity/{everything}",
       "UpstreamHttpMethod": []
     },
     {
@@ -21,12 +21,12 @@
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         {
-          "Host": "http://localhost",
+          "Host": "localhost",
           "Port": 7203
         }
       ],
-      "UpstreamPathTemplate": "/events/{everything}",
-      "UpstreamHttpMethod": [ "GET" ]
+      "UpstreamPathTemplate": "/api/events/{everything}",
+      "UpstreamHttpMethod": []
       //"AuthenticationOptions": {
       //  "AuthenticationProviderKey": "IdentityApiKey",
       //  "AllowedScopes": []
@@ -42,7 +42,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/subscription/{everything}",
-      "UpstreamHttpMethod": [],
+      "UpstreamHttpMethod": []
       //"AuthenticationOptions": {
       //  "AuthenticationProviderKey": "IdentityApiKey",
       //  "AllowedScopes": []
@@ -58,7 +58,7 @@
         }
       ],
       "UpstreamPathTemplate": "/api/notifications/{everything}",
-      "UpstreamHttpMethod": [],
+      "UpstreamHttpMethod": []
       //"AuthenticationOptions": {
       //  "AuthenticationProviderKey": "IdentityApiKey",
       //  "AllowedScopes": []
