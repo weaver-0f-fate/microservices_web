@@ -4,12 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Subscription.API.Controllers;
 
 [ApiController]
-public class ApiController : ControllerBase
+public class ApiController(IMediator mediator) : ControllerBase
 {
-    public readonly IMediator Mediator;
-
-    public ApiController(IMediator mediator)
-    {
-        Mediator = mediator;
-    }
+    public readonly IMediator Mediator = mediator;
 }

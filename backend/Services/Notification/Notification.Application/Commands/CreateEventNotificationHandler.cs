@@ -3,17 +3,11 @@ using Notification.Application.Core.UseCases;
 
 namespace Notification.Application.Commands;
 
-public class CreateEventNotificationHandler : IRequestHandler<CreateEventNotificationRequest, CreateEventNotificationResponse>
+public class CreateEventNotificationHandler(ICreateEventNotification createEventNotification) : IRequestHandler<CreateEventNotificationRequest, CreateEventNotificationResponse>
 {
-    private readonly ICreateEventNotification _createEventNotification;
-    public CreateEventNotificationHandler(ICreateEventNotification createEventNotification)
-    {
-        _createEventNotification = createEventNotification;
-    }
-
     public async Task<CreateEventNotificationResponse> Handle(CreateEventNotificationRequest request, CancellationToken cancellationToken)
     {
-        await _createEventNotification.InvokeAsync(new CreateEventNotificationInput
+        await createEventNotification.InvokeAsync(new CreateEventNotificationInput
         {
             DestinationEmail = request.DestinationEmail,
             EventUuid = request.EventUuid,

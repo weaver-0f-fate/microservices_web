@@ -4,15 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Events.Infrastructure.Repositories;
 
-public class EventsRepository<Event> : RepositoryBase<Event>, IRepository<Event> where Event : class, IAggregateRoot
+public class EventsRepository<Event>(ApplicationDbContext context) : RepositoryBase<Event>(context), IRepository<Event>
+    where Event : class, IAggregateRoot
 {
-    private readonly ApplicationDbContext _context;
-
-    public EventsRepository(ApplicationDbContext context) : base(context)
-    {
-        _context = context;
-    }
-
     public override Task<Event> AddAsync(Event entity, CancellationToken cancellationToken = new())
     {
         if(entity is EntityBase entityBase)
@@ -38,7 +32,7 @@ public class EventsRepository<Event> : RepositoryBase<Event>, IRepository<Event>
 
     private void SetCreatedAtAndUpdatedAtFields()
     {
-        foreach (var entry in _context.ChangeTracker.Entries())
+        foreach (var entry in context.ChangeTracker.Entries())
         {
             if (entry.Entity is not EntityBase entityBase)
                 continue;

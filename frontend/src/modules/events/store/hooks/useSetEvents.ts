@@ -1,21 +1,21 @@
 import { useCallback } from 'react';
 import { EventsState, useSetDraft } from '../store';
-import { EventBaseInfo } from '../../eventsCalendar';
 import { getLocalDate } from '../../../../shared/utilities/dateFunctions';
+import { EventResponse } from '../../fetch/useGetEvents';
 
 const useSetEvents = () => {
     const setDraft = useSetDraft();
 
-    return useCallback((events: EventBaseInfo[]) => {
+    return useCallback((events: EventResponse[]) => {
         setDraft((draft: EventsState) => {
             draft.events = events.map(event => {
                 return {
                     title: event.title,
-                    rrule: event.rrule,
+                    rrule: "123", //event.rrule,
                     date: getLocalDate(event.date),
                     category: event.category,
                     place: event.place,
-                    uuid: event.uuid,
+                    uuid: event.uuid
                 }
             });
         })

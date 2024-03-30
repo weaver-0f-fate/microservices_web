@@ -8,10 +8,8 @@ namespace Subscription.API.Controllers;
 [Route("api/subscription")]
 [ApiController]
 [Authorize]
-public class SubscriptionController : ApiController
+public class SubscriptionController(IMediator mediator) : ApiController(mediator)
 {
-    public SubscriptionController(IMediator mediator) : base(mediator) { }
-
     [HttpPost]
     [Authorize(Roles = "User, Instructor, Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]

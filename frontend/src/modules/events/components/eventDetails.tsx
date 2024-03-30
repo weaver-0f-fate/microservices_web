@@ -19,10 +19,8 @@ const EventDetails = () => {
     useEffect(() => {
         if(eventStore.selectedEvent) {
             getEvent(eventStore.selectedEvent.uuid)
-                .then(result => result.json())
-                .then(data => {
-                    setEvent(data);
-                })
+                .then(result => setEvent(result))
+                .catch(error => console.error(error))
         }
     }, [eventStore.selectedEvent.uuid])
 

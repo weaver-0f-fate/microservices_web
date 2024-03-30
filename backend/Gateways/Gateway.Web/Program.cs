@@ -44,13 +44,8 @@ try
         //ignore
     }
 
-    app.UseRouting();
+    app.UseCors("AllowSpecificOrigin");
     app.UseOcelot().Wait();
-
-    app.UseEndpoints(endpoints =>
-    {
-        endpoints.MapControllers();
-    });
 
     app.Run();
 }
@@ -75,10 +70,10 @@ static void ConfigureCors(IServiceCollection services)
 {
     services.AddCors(options =>
     {
-        options.AddDefaultPolicy(builder =>
+        options.AddPolicy("AllowSpecificOrigin", builder =>
         {
             builder
-                .AllowAnyOrigin()
+                .WithOrigins("http://localhost:3000")
                 .AllowAnyHeader()
                 .AllowAnyMethod();
         });

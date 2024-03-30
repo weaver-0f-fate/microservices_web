@@ -33,18 +33,13 @@ const EventsCalendar = () => {
     const eventDialogRef = useRef<any>();
     const createEventDialogRef = useRef<any>();
 
-
-    const fetchEvents = (category?: string, place?: string, date?: Date) => {
-        getEvents(category, place, date)
-            .then(result => result.json())
-            .then(data => {
-                setEvents(data);
-            })
-            .catch(error => console.log(error));
-    }
-
     useEffect(() => {
-        fetchEvents(eventStore.filters.category, eventStore.filters.place, eventStore.filters.time);
+        getEvents(eventStore.filters.category, eventStore.filters.place, eventStore.filters.time)
+            .then((result: any) => {
+                console.log(result)
+                setEvents(result);
+            })
+
     }, [eventStore.filters.category, eventStore.filters.place, eventStore.filters.time])
 
     const handleEventClick = (event: any) => {
@@ -62,7 +57,7 @@ const EventsCalendar = () => {
                         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, rrulePlugin]}
                         eventClick={handleEventClick}
                         initialView="dayGridMonth"
-                        events={eventStore.events}                
+                        events={eventStore.events}
                         eventTimeFormat={{
                             hour: '2-digit',
                             minute: '2-digit',

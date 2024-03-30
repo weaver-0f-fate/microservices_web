@@ -6,7 +6,6 @@ using Events.Infrastructure.MongoConfiguration;
 using Events.Infrastructure.Repositories;
 using Lamar;
 using Lamar.Microsoft.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using Events.Application.Core.Profiles;
@@ -42,22 +41,15 @@ try
         cfg.RegisterServicesFromAssemblyContaining(typeof(Assembly));
         cfg.RegisterServicesFromAssemblyContaining(typeof(Program));
     });
-    ConfigureSwagger(services);
-    ConfigureCors(services);
-    ConfigureAuth(services, builder.Configuration);
+
+    //ConfigureAuth(services, builder.Configuration);
 
 
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
     app.UseMiddleware<ExceptionMiddleware>();
-    //app.UseCors();
 
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Events API V1");
-    });
 
     app.UseAuthorization();
 
@@ -75,30 +67,6 @@ finally
     Log.CloseAndFlush();
 }
 
-static void ConfigureSwagger(IServiceCollection services)
-{
-    services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Title = "Events API",
-            Version = "v1",
-        });
-    });
-}
-static void ConfigureCors(IServiceCollection services)
-{
-    services.AddCors(options =>
-    {
-        options.AddDefaultPolicy(builder =>
-        {
-            builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-    });
-}
 static void ConfigureContainer(ServiceRegistry services)
 {
     services.For<IRepository<Event>>().Use<EventsRepository<Event>>();

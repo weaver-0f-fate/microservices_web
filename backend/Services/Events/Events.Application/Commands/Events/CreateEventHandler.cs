@@ -4,18 +4,11 @@ using MediatR;
 
 namespace Events.Application.Commands.Events;
 
-public class CreateEventHandler : IRequestHandler<CreateEventRequest, CreateEventResponse>
+public class CreateEventHandler(ICreateEvent createEvent) : IRequestHandler<CreateEventRequest, CreateEventResponse>
 {
-    private readonly ICreateEvent _createEvent;
-
-    public CreateEventHandler(ICreateEvent createEvent)
-    {
-        _createEvent = createEvent;
-    }
-
     public async Task<CreateEventResponse> Handle(CreateEventRequest request, CancellationToken cancellationToken)
     {
-        var result = await _createEvent.InvokeAsync(new CreateEventInput
+        var result = await createEvent.InvokeAsync(new CreateEventInput
         {
             Category = request.Category,
             Title = request.Title,

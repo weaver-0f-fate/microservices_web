@@ -21,17 +21,8 @@ public struct CreateEventInput
 }
 
 
-public class CreateEvent : ICreateEvent
+public class CreateEvent(IRepository<Event> repository, ILogsRepository logsRepository) : ICreateEvent
 {
-    private readonly IRepository<Event> _repository;
-    private readonly ILogsRepository _logsRepository;
-
-    public CreateEvent(IRepository<Event> repository, ILogsRepository logsRepository)
-    {
-        _repository = repository;
-        _logsRepository = logsRepository;
-    }
-
     public async Task<Event> InvokeAsync(CreateEventInput input, CancellationToken cancellationToken)
     {
         try
@@ -50,10 +41,10 @@ public class CreateEvent : ICreateEvent
             };
             @event.UpdateDateTime(input.Date);
 
-            var createdEvent = await _repository.AddAsync(@event, cancellationToken);
-            await _repository.SaveChangesAsync(cancellationToken);
+            var createdEvent = await repository.AddAsync(@event, cancellationToken);
+            await repository.SaveChangesAsync(cancellationToken);
 
-            await _logsRepository.CreateLogAsync(new LogRecord
+            await logsRepository.CreateLogAsync(new LogRecord
             {
                 AuditTime = DateTime.UtcNow,
                 Action = $"Created event with id: {createdEvent.Id}"

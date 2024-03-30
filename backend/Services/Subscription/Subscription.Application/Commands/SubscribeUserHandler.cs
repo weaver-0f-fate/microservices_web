@@ -3,18 +3,11 @@ using Subscription.Application.Core.UseCases;
 
 namespace Subscription.Application.Commands;
 
-public class SubscribeUserHandler : IRequestHandler<SubscribeUserRequest, SubscribeUserResponse>
+public class SubscribeUserHandler(ISubscribeUser subscribeUser) : IRequestHandler<SubscribeUserRequest, SubscribeUserResponse>
 {
-    private readonly ISubscribeUser _subscribeUser;
-
-    public SubscribeUserHandler(ISubscribeUser subscribeUser)
-    {
-        _subscribeUser = subscribeUser;
-    }
-
     public async Task<SubscribeUserResponse> Handle(SubscribeUserRequest request, CancellationToken cancellationToken)
     {
-        var result = await _subscribeUser.InvokeAsync(new SubscribeUserInput
+        var result = await subscribeUser.InvokeAsync(new SubscribeUserInput
         {
             EventId = request.EventUuid,
             SubscribedEmail = request.SubscribedEmail,

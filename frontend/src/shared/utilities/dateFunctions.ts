@@ -16,7 +16,7 @@ export const compareTimes = (time1: Date, time2: Date) => {
     }
 }
 
-export const getLocalDate = (dateString: any) => {;
+export const getLocalDate = (dateString: string) => {;
     const dateComponents = dateString.split('T');
     const datePart = dateComponents[0];
     const timePart = dateComponents[1];

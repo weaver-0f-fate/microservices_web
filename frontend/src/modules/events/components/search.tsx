@@ -17,7 +17,6 @@ const Search = (props: SearchProps) => {
     useEffect(() => {
         if(searchString){
             searchEvents(searchString)
-                .then(result => result.json())
                 .then((data: SearchEvent[]) => {
                     setOptions(data);
                 })

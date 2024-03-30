@@ -9,10 +9,8 @@ namespace Notification.API.Controllers;
 [Route("api/notifications")]
 [ApiController]
 [Authorize]
-public class NotificationsController : ApiController
+public class NotificationsController(IMediator mediator) : ApiController(mediator)
 {
-    public NotificationsController(IMediator mediator) : base(mediator) { }
-
     [HttpGet("{notificationId}")]
     [Authorize(Roles = "User, Instructor, Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]

@@ -3,18 +3,11 @@ using MediatR;
 
 namespace Events.Application.Requests.Events;
 
-public class GetEventsHandler : IRequestHandler<GetEventsRequest, GetEventsResponse>
+public class GetEventsHandler(IGetEvents getEvents) : IRequestHandler<GetEventsRequest, GetEventsResponse>
 {
-    private readonly IGetEvents _getEvents;
-
-    public GetEventsHandler(IGetEvents getEvents)
-    {
-        _getEvents = getEvents;
-    }
-
     public async Task<GetEventsResponse> Handle(GetEventsRequest request, CancellationToken cancellationToken)
     {
-        var results = await _getEvents.ExecuteAsync(new GetEventsInput
+        var results = await getEvents.ExecuteAsync(new GetEventsInput
         {
             Category = request.Category,
             Place = request.Place,
@@ -45,7 +38,7 @@ public class GetEventsRequest : IRequest<GetEventsResponse>
 
 public class GetEventsResponse
 {
-    public IEnumerable<EventBaseInfo> Events { get; set; } = Enumerable.Empty<EventBaseInfo>();
+    public IEnumerable<EventBaseInfo> Events { get; set; } = default!;
 }
 
 public class EventBaseInfo

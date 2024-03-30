@@ -20,19 +20,8 @@ public struct PatchEventInput
     public JsonPatchDocument<UpdateEventDto> PatchDoc { get; set; }
 }
 
-public class PatchEvent : IPatchEvent
+public class PatchEvent(IRepository<Event> repository, IMapper mapper, ILogsRepository logsRepository) : IPatchEvent
 {
-    private readonly IRepository<Event> _repository;
-    private readonly IMapper _mapper;
-    private readonly ILogsRepository _logsRepository;
-
-    public PatchEvent(IRepository<Event> repository, IMapper mapper, ILogsRepository logsRepository)
-    {
-        _repository = repository;
-        _mapper = mapper;
-        _logsRepository = logsRepository;
-    }
-
     public async Task InvokeAsync(PatchEventInput input, CancellationToken cancellationToken)
     {
         try
@@ -40,19 +29,19 @@ public class PatchEvent : IPatchEvent
             using var transactionScope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled);
 
             var spec = new EventByUuidSpecification(input.EventUuid);
-            var @event = await _repository.SingleOrDefaultAsync(spec, cancellationToken)
+            var @event = await repository.SingleOrDefaultAsync(spec, cancellationToken)
                          ?? throw new NotFoundException($"Event with uuid {input.EventUuid} not found.");
 
             var updateEventDto = new UpdateEventDto(@event);
             input.PatchDoc.ApplyTo(updateEventDto);
 
-            var updatedEvent = _mapper.Map<Event>(updateEventDto);
+            var updatedEvent = mapper.Map<Event>(updateEventDto);
             @event.Update(updatedEvent);
 
-            await _repository.UpdateAsync(@event, cancellationToken);
-            await _repository.SaveChangesAsync(cancellationToken);
+            await repository.UpdateAsync(@event, cancellationToken);
+            await repository.SaveChangesAsync(cancellationToken);
 
-            await _logsRepository.CreateLogAsync(new LogRecord
+            await logsRepository.CreateLogAsync(new LogRecord
             {
                 AuditTime = DateTime.UtcNow,
                 Action = $"Updated event with id: {input.EventUuid}"

@@ -22,22 +22,18 @@ try
 
     services.AddControllers();
     services.AddEndpointsApiExplorer();
-    services.AddSwaggerGen();
 
     services.AddMediatR(cfg => {
         cfg.RegisterServicesFromAssemblyContaining(typeof(Identity.Application.Assembly));
         cfg.RegisterServicesFromAssemblyContaining(typeof(Assembly));
         cfg.RegisterServicesFromAssemblyContaining(typeof(Program));
     });
-    ConfigureCors(services);
 
     var app = builder.Build();
 
     // Configure the HTTP request pipeline.
     if (app.Environment.IsDevelopment())
     {
-        app.UseSwagger();
-        app.UseSwaggerUI();
     }
 
     app.UseHttpsRedirection();
@@ -55,20 +51,6 @@ finally
 {
     Log.Information("Shut down complete");
     Log.CloseAndFlush();
-}
-
-static void ConfigureCors(IServiceCollection services)
-{
-    services.AddCors(options =>
-    {
-        options.AddDefaultPolicy(builder =>
-        {
-            builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-    });
 }
 static void ConfigureContainer(ServiceRegistry services)
 {

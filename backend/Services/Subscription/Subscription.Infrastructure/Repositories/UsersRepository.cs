@@ -4,14 +4,9 @@ using Subscription.Domain.Aggregates.Base;
 
 namespace Subscription.Infrastructure.Repositories;
 
-public class UsersRepository<User> : RepositoryBase<User>, IRepository<User> where User : class, IAggregateRoot
+public class UsersRepository<User>(SubscriptionDbContext context) : RepositoryBase<User>(context), IRepository<User>
+    where User : class, IAggregateRoot
 {
-    private readonly SubscriptionDbContext _context;
-    public UsersRepository(SubscriptionDbContext context) : base(context)
-    {
-        _context = context;
-    }
-
     public override Task<User> AddAsync(User entity, CancellationToken cancellationToken = new())
     {
         if (entity is EntityBase entityBase)
@@ -36,7 +31,7 @@ public class UsersRepository<User> : RepositoryBase<User>, IRepository<User> whe
 
     private void SetCreatedAtAndUpdatedAtFields()
     {
-        foreach (var entry in _context.ChangeTracker.Entries())
+        foreach (var entry in context.ChangeTracker.Entries())
         {
             if (entry.Entity is not EntityBase entityBase)
                 continue;

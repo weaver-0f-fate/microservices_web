@@ -12,6 +12,14 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import AppRouter from './routing/appRouting';
+import { SnackbarProvider } from 'notistack';
+
+const NotificationProvider = (props: any) => {
+  return <SnackbarProvider {...props} maxSnack={3} sx={{ marginTop: "54px" }} anchorOrigin={{
+      vertical: "top",
+      horizontal: "right",
+  }} />;
+};
 
 const AppProviders = nestComponents([
   (props: any) => <ThemeProvider theme={theme}>{props.children}</ThemeProvider>,
@@ -32,7 +40,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <Layout>
-          <RouterProvider router={router}/>
+            <RouterProvider router={router}/>
         </Layout>
       </LocalizationProvider>
     </ThemeProvider>

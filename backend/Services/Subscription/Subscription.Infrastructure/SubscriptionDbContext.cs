@@ -3,12 +3,9 @@ using Subscription.Domain.Aggregates.Base;
 
 namespace Subscription.Infrastructure;
 
-public class SubscriptionDbContext : DbContext
+public class SubscriptionDbContext(DbContextOptions<SubscriptionDbContext> options) : DbContext(options)
 {
     public DbSet<Domain.Aggregates.Subscription> Subscriptions { get; set; }
-
-    public SubscriptionDbContext(DbContextOptions<SubscriptionDbContext> options)
-        : base(options) { }
 
     public override int SaveChanges()
     {

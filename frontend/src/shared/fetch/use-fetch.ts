@@ -24,6 +24,7 @@ const usePublicFetch = () => {
             });
     }, [fetch]);
 }
+
 const useSecureFetch = () => {
     const fetch = useFetch();
 
@@ -57,8 +58,7 @@ type FetchOptions = {
     body?: FormData | string | any,
     crossDomain?: boolean,
     nokNotification?: string,
-    signal?: AbortSignal,
-    mode?: any
+    signal?: AbortSignal
 }
 
 declare var AbortSignal: {
@@ -82,7 +82,7 @@ const useFetch = () => {
             responseType = FetchResponseTypes.JSON,
             headers,
             showLoader = true,
-            timeout
+            timeout,
         } = options;
 
         const fetchOptions: FetchOptions = {
@@ -95,7 +95,6 @@ const useFetch = () => {
             responseType: responseType,
             method: method,
             crossDomain:true,
-            mode: 'no-cors'
         };
 
         if (body instanceof FormData) {
@@ -119,7 +118,6 @@ const useFetch = () => {
                 return Promise.resolve(result);
             })
             .catch(async (error) => {
-
                 let errors = [] as Array<string>;
 
                 if (nokNotification && nokNotification.length > 0) {
@@ -132,25 +130,25 @@ const useFetch = () => {
                         errors.push(data.errorMessages.join('. '));
                         break;
                     case STATUS_CODE_INTERNAL_SERVER_ERROR:
-                        errors.push('500: Tehniline viga');
+                        errors.push('500: Technical error');
                         break;
                     case STATUS_CODE_METHOD_NOT_ALLOWED:
-                        errors.push('405: Tehniline viga');
+                        errors.push('405: Technical error');
                         break;
                     case STATUS_CODE_FORBIDDEN:
                         const message = (await error.json()).message;
-                        errors.push(message.length > 0 ? message : 'Tegevus pole lubatud');
+                        errors.push(message.length > 0 ? message : '403: Forbidden');
                         break;
                     case STATUS_CODE_BAD_GATEWAY:
-                        errors.push('502: Vigane lüüs');
+                        errors.push('502: Bad gateway');
                         break;
                     case STATUS_CODE_NOT_FOUND:
-                        errors.push('404');
+                        errors.push('404: Not found');
                         break;
                     case STATUS_CODE_BAD_REQUEST:
                         errors.pop()
                         errors.push(badRequestNotification)
-                        errors.push('400');
+                        errors.push('400: Bad request');
                         break;
                 }
 
@@ -158,7 +156,7 @@ const useFetch = () => {
 
                 return Promise.reject(error);
             });
-    }, [notify]);
+    }, []);
 }
 
 const fetchFromApi = (path: string, options: FetchOptions, responseType: FetchResponseTypes) => {
@@ -167,7 +165,6 @@ const fetchFromApi = (path: string, options: FetchOptions, responseType: FetchRe
         .then(responseOk)
         .then(async response => {
             try {
-                console.log('test')
                 switch (responseType) {
                     case FetchResponseTypes.BLOB:
                         return response.blob();
@@ -193,6 +190,7 @@ const fetchFromApi = (path: string, options: FetchOptions, responseType: FetchRe
 }
 
 const responseOk = async ( response: Response ) => (response.ok ? response : Promise.reject(response));
+
 const stringify = (query: any) => qs.stringify(query, {
     arrayFormat: 'comma'
 });

@@ -1,5 +1,6 @@
 import { Dayjs } from "dayjs"
 import { useCallback } from "react"
+import { usePublicFetch } from "../../../shared/fetch/use-fetch";
 
 export interface PostEventProps {
     category: string,
@@ -12,10 +13,11 @@ export interface PostEventProps {
 }
 
 export const usePostEvent = () => {
+    const fetch = usePublicFetch();
 
     return useCallback(
-        (props: PostEventProps) => 
-            fetch(`http://localhost:7203/api/events`, {
+        (props: PostEventProps) : Promise<PostEventResponse> => 
+            fetch(`http://localhost:7201/api/events`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -30,4 +32,12 @@ export const usePostEvent = () => {
                     date: props.date.toISOString()
                 }),
         }), [])
+}
+
+export interface PostEventResponse {
+    uuid: string,
+    category: string,
+    title: string,
+    place: string,
+    date: string,
 }

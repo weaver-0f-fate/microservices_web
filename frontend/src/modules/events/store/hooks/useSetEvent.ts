@@ -1,12 +1,12 @@
 import { useCallback } from 'react';
 import { EventsState, useSetDraft } from '../store';
-import { Event } from '../../../../shared/models/events'
 import { getLocalDate } from '../../../../shared/utilities/dateFunctions';
+import { EventResponse } from '../../fetch/useGetEvent';
 
 const useSetEvent = () => {
     const setDraft = useSetDraft();
 
-    return useCallback((event: Event) => {
+    return useCallback((event: EventResponse) => {
         setDraft((draft: EventsState) => {
             draft.selectedEvent.category = event.category;
             draft.selectedEvent.title = event.title;

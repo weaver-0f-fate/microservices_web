@@ -3,18 +3,11 @@ using MediatR;
 
 namespace Events.Application.Requests.Events;
 
-public class GetEventHandler : IRequestHandler<GetEventRequest, GetEventResponse>
+public class GetEventHandler(IGetEvent getEvent) : IRequestHandler<GetEventRequest, GetEventResponse>
 {
-    private readonly IGetEvent _getEvent;
-
-    public GetEventHandler(IGetEvent getEvent)
-    {
-        _getEvent = getEvent;
-    }
-
     public async Task<GetEventResponse> Handle(GetEventRequest request, CancellationToken cancellationToken)
     {
-        var result = await _getEvent.ExecuteAsync(request.Uuid, cancellationToken);
+        var result = await getEvent.ExecuteAsync(request.Uuid, cancellationToken);
 
         return new GetEventResponse
         {

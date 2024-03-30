@@ -1,7 +1,6 @@
 using Lamar;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
 using Notification.API.Filters;
 using Notification.API.Middleware;
 using Notification.Domain.Aggregates.Base;
@@ -40,9 +39,6 @@ try
         httpClient.BaseAddress = new Uri(baseUrl);
     });
 
-    ConfigureCors(services);
-    ConfigureSwagger(services);
-
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
     await services.AddDbContext(connectionString!);
 
@@ -57,18 +53,10 @@ try
 
     // Configure the HTTP request pipeline.
     app.UseMiddleware<ExceptionMiddleware>();
-    app.UseCors();
-
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Notifications API V1");
-    });
 
     app.UseAuthorization();
 
     app.MapControllers();
-
     app.Run();
 }
 catch (Exception exception)
@@ -81,30 +69,6 @@ finally
     Log.CloseAndFlush();
 }
 
-static void ConfigureSwagger(IServiceCollection services)
-{
-    services.AddSwaggerGen(c =>
-    {
-        c.SwaggerDoc("v1", new OpenApiInfo
-        {
-            Title = "Notifications API",
-            Version = "v1",
-        });
-    });
-}
-static void ConfigureCors(IServiceCollection services)
-{
-    services.AddCors(options =>
-    {
-        options.AddDefaultPolicy(builder =>
-        {
-            builder
-                .AllowAnyOrigin()
-                .AllowAnyHeader()
-                .AllowAnyMethod();
-        });
-    });
-}
 static void ConfigureContainer(ServiceRegistry services)
 {
     services.For<IRepository<Notification.Domain.Aggregates.Notification>>().Use<NotificationsRepository<Notification.Domain.Aggregates.Notification>>();

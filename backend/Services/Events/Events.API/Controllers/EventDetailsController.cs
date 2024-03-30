@@ -12,10 +12,8 @@ namespace Events.API.Controllers;
 [Route("api/events/{uuid}")]
 [ApiController]
 [Authorize]
-public class EventDetailsController : ApiController
+public class EventDetailsController(IMediator mediator) : ApiController(mediator)
 {
-    public EventDetailsController(IMediator mediator) : base(mediator) { }
-
     [HttpGet]
     [Authorize(Roles = "Instructor, Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]

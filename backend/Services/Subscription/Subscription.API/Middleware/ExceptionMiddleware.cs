@@ -21,6 +21,7 @@ public class ExceptionMiddleware : IMiddleware
             LogContext.PushProperty("StackTrace", exception.StackTrace);
             var errorResult = new ErrorResult
             {
+                Messages = new List<string>(),
                 Source = exception.TargetSite?.DeclaringType?.FullName,
                 Exception = exception.Message.Trim(),
                 ErrorId = errorId,
@@ -58,8 +59,7 @@ public class ExceptionMiddleware : IMiddleware
 
 public class ErrorResult
 {
-    public List<string> Messages { get; set; } = new();
-
+    public List<string> Messages { get; set; } = default!;
     public string? Source { get; set; }
     public string? Exception { get; set; }
     public string? ErrorId { get; set; }

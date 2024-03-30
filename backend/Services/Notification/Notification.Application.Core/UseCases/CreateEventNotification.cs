@@ -15,19 +15,11 @@ public struct CreateEventNotificationInput
     public DateTime NotificationTime { get; set; }
 }
 
-public class CreateEventNotification : ICreateEventNotification
-{
-    private readonly IRepository<Domain.Aggregates.Notification> _notificationRepository;
-    private readonly IHttpClientFactory _httpClientFactory;
-
-    public CreateEventNotification(
+public class CreateEventNotification(
         IRepository<Domain.Aggregates.Notification> notificationRepository,
         IHttpClientFactory httpClientFactory)
-    {
-        _notificationRepository = notificationRepository;
-        _httpClientFactory = httpClientFactory;
-    }
-
+    : ICreateEventNotification
+{
     public async Task InvokeAsync(CreateEventNotificationInput input, CancellationToken cancellationToken)
     {
         try
@@ -44,7 +36,7 @@ public class CreateEventNotification : ICreateEventNotification
                 notificationMessage,
                 input.DestinationEmail);
 
-            await _notificationRepository.AddAsync(notification, cancellationToken);
+            await notificationRepository.AddAsync(notification, cancellationToken);
             transactionScope.Complete();
         }
         catch (Exception ex)
@@ -56,7 +48,7 @@ public class CreateEventNotification : ICreateEventNotification
 
     private async Task<EventInfoResponse> GetEventInfo(Guid eventUuid, CancellationToken cancellationToken)
     {
-        var httpClient = _httpClientFactory.CreateClient("EventsHttpClient");
+        var httpClient = httpClientFactory.CreateClient("EventsHttpClient");
 
         var response = await httpClient.GetAsync($"api/events/{eventUuid}", cancellationToken);
 

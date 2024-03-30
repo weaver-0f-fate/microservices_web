@@ -6,6 +6,7 @@ import { PostEventProps, usePostEvent } from "../fetch/usePostEvent";
 import useAddEvent from "../store/hooks/useAddEvent";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { getLocalDate } from "../../../shared/utilities/dateFunctions";
 
 
 const CreateEventDialog = forwardRef((props: any, ref: any) => {
@@ -43,11 +44,10 @@ const CreateEventDialog = forwardRef((props: any, ref: any) => {
 
     const handleCreateEvent = () => {
         postEvent(postEventProps)
-            .then(result => result.json())
             .then(data => {
                 addEvent({
                     title: data.title,
-                    date: data.date,
+                    date: getLocalDate(data.date),
                     uuid: data.uuid,
                     category: data.category,
                     place: data.place

@@ -4,14 +4,9 @@ using Notification.Domain.Aggregates.Base;
 
 namespace Notification.Infrastructure.Repositories;
 
-public class NotificationsRepository<Notification> : RepositoryBase<Notification>, IRepository<Notification> where Notification : class, IAggregateRoot
+public class NotificationsRepository<Notification>(NotificationDbContext context) : RepositoryBase<Notification>(context), IRepository<Notification>
+    where Notification : class, IAggregateRoot
 {
-    private readonly NotificationDbContext _context;
-    public NotificationsRepository(NotificationDbContext context) : base(context)
-    {
-        _context = context;
-    }
-
     public override Task<Notification> AddAsync(Notification entity, CancellationToken cancellationToken = new CancellationToken())
     {
         if (entity is EntityBase entityBase)
@@ -36,7 +31,7 @@ public class NotificationsRepository<Notification> : RepositoryBase<Notification
 
     private void SetCreatedAtAndUpdatedAtFields()
     {
-        foreach (var entry in _context.ChangeTracker.Entries())
+        foreach (var entry in context.ChangeTracker.Entries())
         {
             if (entry.Entity is not EntityBase entityBase)
                 continue;

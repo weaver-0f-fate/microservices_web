@@ -3,18 +3,11 @@ using Notification.Application.Core.Read;
 
 namespace Notification.Application.Requests;
 
-public class GetNotificationHandler : IRequestHandler<GetNotificationRequest, GetNotificationResponse>
+public class GetNotificationHandler(IGetNotification getNotification) : IRequestHandler<GetNotificationRequest, GetNotificationResponse>
 {
-    private readonly IGetNotification _getNotification;
-
-    public GetNotificationHandler(IGetNotification getNotification)
-    {
-        _getNotification = getNotification;
-    }
-
     public async Task<GetNotificationResponse> Handle(GetNotificationRequest request, CancellationToken cancellationToken)
     {
-        var res = await _getNotification.ExecuteAsync(request.NotificationId, cancellationToken);
+        var res = await getNotification.ExecuteAsync(request.NotificationId, cancellationToken);
 
         return new GetNotificationResponse
         {

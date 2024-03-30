@@ -1,20 +1,14 @@
 ﻿using Events.Application.Core.Read.Events;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Events.Application.Requests.Events;
 
-public class SearchEventsHandler : IRequestHandler<SearchEventsRequest, SearchEventsResponse>
+public class SearchEventsHandler(ISearchEvents searchEvents) : IRequestHandler<SearchEventsRequest, SearchEventsResponse>
 {
-    private readonly ISearchEvents _searchEvents;
-
-    public SearchEventsHandler(ISearchEvents searchEvents)
-    {
-        _searchEvents = searchEvents;
-    }
-
     public async Task<SearchEventsResponse> Handle(SearchEventsRequest request, CancellationToken cancellationToken)
     {
-        var result = await _searchEvents.ExecuteAsync(request.SearchString, cancellationToken);
+        var result = await searchEvents.ExecuteAsync(request.SearchString, cancellationToken);
 
         return new SearchEventsResponse
         {
@@ -37,7 +31,7 @@ public class SearchEventsRequest : IRequest<SearchEventsResponse>
 
 public class SearchEventsResponse
 {
-    public IEnumerable<SearchEventDto> Events { get; set; } = new List<SearchEventDto>();
+    public IEnumerable<SearchEventDto> Events { get; set; } = default!;
 }
 
 public struct SearchEventDto

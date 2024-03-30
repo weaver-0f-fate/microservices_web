@@ -15,19 +15,12 @@ public struct GetNotificationOutput
     public bool IsSent { get; set; }
 }
 
-public class GetNotification : IGetNotification
+public class GetNotification(IRepository<Domain.Aggregates.Notification> repository) : IGetNotification
 {
-    private readonly IRepository<Domain.Aggregates.Notification> _repository;
-
-    public GetNotification(IRepository<Domain.Aggregates.Notification> repository)
-    {
-        _repository = repository;
-    }
-
     public async Task<GetNotificationOutput> ExecuteAsync(Guid eventUuid, CancellationToken cancellationToken)
     {
         var spec = new NotificationByIdSpecification(eventUuid);
-        var notification = await _repository.SingleOrDefaultAsync(spec, cancellationToken);
+        var notification = await repository.SingleOrDefaultAsync(spec, cancellationToken);
 
         return notification is null
             ? throw new NotFoundException($"Notification with Id {eventUuid} was not found.")

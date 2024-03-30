@@ -3,12 +3,9 @@ using Notification.Domain.Aggregates.Base;
 
 namespace Notification.Infrastructure;
 
-public class NotificationDbContext : DbContext
+public class NotificationDbContext(DbContextOptions<NotificationDbContext> options) : DbContext(options)
 {
     public DbSet<Domain.Aggregates.Notification> Notifications { get; set; }
-
-    public NotificationDbContext(DbContextOptions<NotificationDbContext> options)
-        : base(options) { }
 
     public override int SaveChanges()
     {

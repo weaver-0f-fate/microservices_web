@@ -14,19 +14,12 @@ public struct GetEventsInput
     public TimeSpan? StartDate { get; set; }
 }
 
-public class GetEvents : IGetEvents
+public class GetEvents(IRepository<Event> repository) : IGetEvents
 {
-    private readonly IRepository<Event> _repository;
-
-    public GetEvents(IRepository<Event> repository)
-    {
-        _repository = repository;
-    }
-
     public async Task<IEnumerable<Event>> ExecuteAsync(GetEventsInput input, CancellationToken cancellationToken)
     {
         var spec = new EventSpecification(input.Category, input.Place, input.StartDate);
-        var result = await _repository.ListAsync(spec, cancellationToken);
+        var result = await repository.ListAsync(spec, cancellationToken);
         return result;
     }
 }

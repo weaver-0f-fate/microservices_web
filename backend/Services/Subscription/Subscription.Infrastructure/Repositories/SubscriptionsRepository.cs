@@ -4,16 +4,10 @@ using Subscription.Domain.Aggregates.Base;
 
 namespace Subscription.Infrastructure.Repositories;
 
-public class SubscriptionsRepository<Subscription> : RepositoryBase<Subscription>, IRepository<Subscription> where Subscription : class, IAggregateRoot
+public class SubscriptionsRepository<Subscription>(SubscriptionDbContext context) : RepositoryBase<Subscription>(context), IRepository<Subscription>
+    where Subscription : class, IAggregateRoot
 {
-    private readonly SubscriptionDbContext _context;
-
-    public SubscriptionsRepository(SubscriptionDbContext context) : base(context)
-    {
-        _context = context;
-    }
-
-    public override Task<Subscription> AddAsync(Subscription entity, CancellationToken cancellationToken = new CancellationToken())
+    public override Task<Subscription> AddAsync(Subscription entity, CancellationToken cancellationToken = new())
     {
         if (entity is EntityBase entityBase)
             entityBase.CreatedAt = DateTime.UtcNow;
@@ -21,7 +15,7 @@ public class SubscriptionsRepository<Subscription> : RepositoryBase<Subscription
         return base.AddAsync(entity, cancellationToken);
     }
 
-    public override Task UpdateAsync(Subscription entity, CancellationToken cancellationToken = new CancellationToken())
+    public override Task UpdateAsync(Subscription entity, CancellationToken cancellationToken = new())
     {
         if (entity is EntityBase entityBase)
             entityBase.UpdatedAt = DateTime.UtcNow;
@@ -37,7 +31,7 @@ public class SubscriptionsRepository<Subscription> : RepositoryBase<Subscription
 
     private void SetCreatedAtAndUpdatedAtFields()
     {
-        foreach (var entry in _context.ChangeTracker.Entries())
+        foreach (var entry in context.ChangeTracker.Entries())
         {
             if (entry.Entity is not EntityBase entityBase)
                 continue;

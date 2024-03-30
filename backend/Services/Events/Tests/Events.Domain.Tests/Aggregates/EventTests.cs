@@ -84,9 +84,11 @@ public class EventTests
     public void GetDateWithTime_BothDateAndTimeAssigned_ShouldReturnCombinedDateTime()
     {
         // Arrange
-        var yourObject = new Event();
-        yourObject.Date = DateTime.Parse("2023-08-26"); // Assign a DateTime
-        yourObject.UtcTime = TimeSpan.Parse("14:30"); // Assign a TimeSpan
+        var yourObject = new Event
+        {
+            Date = DateTime.Parse("2023-08-26"), // Assign a DateTime
+            UtcTime = TimeSpan.Parse("14:30") // Assign a TimeSpan
+        };
 
         // Act
         var result = yourObject.GetDateWithTime();
@@ -100,9 +102,11 @@ public class EventTests
     public void GetDateWithTime_NullDate_ShouldThrowValidationException()
     {
         // Arrange
-        var yourObject = new Event(); 
-        yourObject.Date = null; // Date is not assigned
-        yourObject.UtcTime = TimeSpan.Parse("14:30"); // Assign a TimeSpan
+        var yourObject = new Event
+        {
+            Date = null, // Date is not assigned
+            UtcTime = TimeSpan.Parse("14:30") // Assign a TimeSpan
+        };
 
         // Act and Assert
         Assert.ThrowsException<ValidationException>(() => yourObject.GetDateWithTime());
@@ -112,9 +116,11 @@ public class EventTests
     public void GetDateWithTime_NullTime_ShouldThrowValidationException()
     {
         // Arrange
-        var yourObject = new Event();
-        yourObject.Date = DateTime.Parse("2023-08-26"); // Assign a DateTime
-        yourObject.UtcTime = null; // UtcTime is not assigned
+        var yourObject = new Event
+        {
+            Date = DateTime.Parse("2023-08-26"), // Assign a DateTime
+            UtcTime = null // UtcTime is not assigned
+        };
 
         // Act and Assert
         Assert.ThrowsException<ValidationException>(() => yourObject.GetDateWithTime());
@@ -124,9 +130,11 @@ public class EventTests
     public void GetDateWithTime_NullDateAndTime_ShouldThrowValidationException()
     {
         // Arrange
-        var yourObject = new Event();
-        yourObject.Date = null; // Date is not assigned
-        yourObject.UtcTime = null; // UtcTime is not assigned
+        var yourObject = new Event
+        {
+            Date = null, // Date is not assigned
+            UtcTime = null // UtcTime is not assigned
+        };
 
         // Act and Assert
         Assert.ThrowsException<ValidationException>(() => yourObject.GetDateWithTime());
