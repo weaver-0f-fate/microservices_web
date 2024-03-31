@@ -2,14 +2,15 @@ import React from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material"
 import EventDetails from "./eventDetails"
 import { forwardRef, useState, useImperativeHandle } from "react";
-import useEvent from "../store/hooks/useEvent";
 import DeleteEvent from "./deleteEvent";
 import Recurrency from "./recurrency/recurrency";
 import Subscribe from "./subscription/subscribe";
+import { useSelector } from "react-redux";
+import { Event } from '../../../shared/models/events';
 
 
 const EventDialog = forwardRef((props: any, ref: any) => {
-    const eventStore = useEvent();
+    const event = useSelector((state: any) => state.selectedEvent as Event);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
 
     useImperativeHandle(ref, () => ({
@@ -24,7 +25,7 @@ const EventDialog = forwardRef((props: any, ref: any) => {
 
     return (
         <Dialog open={openDialog}>
-            <DialogTitle>{eventStore.selectedEvent.title}</DialogTitle>
+            <DialogTitle>{event.title}</DialogTitle>
             <DialogContent>
                 <EventDetails />
             </DialogContent>

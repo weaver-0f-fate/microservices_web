@@ -3,19 +3,16 @@ import { Box, Button } from '@mui/material';
 import PlaceFilter from './placeFilter';
 import CategoryFilter from './categoryFilter';
 import TimeFilter from './timeFilter';
-import useSetPlaceFilter from '../../store/hooks/filters/useSetPlaceFilter';
-import useSetCategoryFilter from '../../store/hooks/filters/useSetCategoryFilter';
-import useSetTimeFilter from '../../store/hooks/filters/useSetTimeFilter';
+import { setCategoryFilter, setPlaceFilter, setTimeFilter } from "../../store/filtersSlice";
+import { useDispatch } from "react-redux";
 
 const DisplayFilters = () => {
-    const setPlaceFilter = useSetPlaceFilter();
-    const setCategoryFilter = useSetCategoryFilter();
-    const setTimeFilter = useSetTimeFilter();
+    const dispatch = useDispatch();
 
     const handleClear = () => {
-        setPlaceFilter('');
-        setCategoryFilter('');
-        setTimeFilter(undefined);
+        dispatch(setPlaceFilter(''));
+        dispatch(setCategoryFilter(''));
+        dispatch(setTimeFilter(undefined));
     }
     
     return (

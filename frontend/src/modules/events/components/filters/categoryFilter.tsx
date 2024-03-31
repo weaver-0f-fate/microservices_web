@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react"
-import useSetCategoryFilter from "../../store/hooks/filters/useSetCategoryFilter";
 import { Grid, InputLabel, TextField } from "@mui/material";
-import useEvent from "../../store/hooks/useEvent";
+import { Filters, setCategoryFilter } from "../../store/filtersSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const CategoryFilter = () => {
-    const setCategoryFilter = useSetCategoryFilter();
-    const eventStore = useEvent();
+    const filters = useSelector((state: any) => state.filters as Filters);
+    const dispatch = useDispatch();
     const [category, setCategory] = useState<string>('');
 
     useEffect(() => {
-        setCategory(eventStore.filters.category);
-    }, [eventStore.filters.category])
+        setCategory(filters.category);
+    }, [filters.category])
 
     const handleChange = (e: any) => {
-        setCategoryFilter(e.target.value);
+        dispatch(setCategoryFilter(e.target.value));
     }
 
     return (

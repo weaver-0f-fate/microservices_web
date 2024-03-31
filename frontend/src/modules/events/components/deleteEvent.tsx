@@ -1,7 +1,9 @@
 import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
 import { Button, Dialog, DialogActions, DialogTitle } from "@mui/material";
-import useEvent from "../store/hooks/useEvent";
-import useDeleteEvent from "../store/hooks/useDeleteEvent";
+import { useDispatch, useSelector } from "react-redux";
+import { Event } from '../../../shared/models/events';
+import { removeEvent } from "../store/eventsSlice";
+import { setSelectedEvent } from "../store/selectedEventSlice";
 
 interface DeleteEventProps {
     closeDetails: () => void;
@@ -9,8 +11,9 @@ interface DeleteEventProps {
 
 const DeleteEvent = (props: DeleteEventProps) => {
     const { closeDetails } = props;
-    const eventStore = useEvent();
-    const disabled = eventStore.selectedEvent && eventStore.selectedEvent.uuid ? false : true;
+    const event = useSelector((state: any) => state.selectedEvent as Event);
+        
+    const disabled = event && event.uuid ? false : true;
     const confirmDeleteDialog = useRef<any>({});
 
     const handleDelete = () => {
@@ -32,9 +35,9 @@ const DeleteEvent = (props: DeleteEventProps) => {
 
 const DeleteDialog = forwardRef((props: any, ref: any) => {
     const { closeDetails } = props;
-    const eventStore = useEvent();
+    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const dispatch = useDispatch();
     const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const deleteEvent = useDeleteEvent();
 
     useImperativeHandle(ref, () => ({
         openDialog() {
@@ -43,13 +46,16 @@ const DeleteDialog = forwardRef((props: any, ref: any) => {
     }))
 
     const handleDelete = () => {
-        if(eventStore.selectedEvent)
-            fetch(`https://localhost:7203/api/events/${eventStore.selectedEvent.uuid}`, {
+        if(event)
+            fetch(`https://localhost:7203/api/events/${event.uuid}`, {
                 method: 'DELETE'
             })
             .then(() => {
-                if(eventStore.selectedEvent)
-                    deleteEvent(eventStore.selectedEvent.uuid);
+                if(event)
+                {
+                    dispatch(setSelectedEvent(undefined));
+                    dispatch(removeEvent(event.uuid));
+                }
             })
             setOpenDialog(false)
             closeDetails();
@@ -62,7 +68,7 @@ const DeleteDialog = forwardRef((props: any, ref: any) => {
 
     return (
         <Dialog open={openDialog} sx={{ minWidth: 300, minHeight: 50 }}>
-            <DialogTitle>Delte event: {eventStore.selectedEvent ? eventStore.selectedEvent.title : ''}</DialogTitle>
+            <DialogTitle>Delte event: {event ? event.title : ''}</DialogTitle>
             <DialogActions>
                 <Button variant="contained" onClick={handleDelete}>
                     Delete

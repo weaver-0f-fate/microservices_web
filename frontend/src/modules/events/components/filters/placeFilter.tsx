@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from "react"
-import useSetPlaceFilter from "../../store/hooks/filters/useSetPlaceFilter";
 import { Grid, InputLabel, TextField } from "@mui/material";
-import useEvent from "../../store/hooks/useEvent";
+import { Filters, setPlaceFilter } from "../../store/filtersSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const PlaceFilter = () => {
-    const setPlaceFilter = useSetPlaceFilter();
-    const eventStore = useEvent();
+    const filters = useSelector((state: any) => state.filters as Filters);
+    const dispatch = useDispatch();
     const [place, setPlace] = useState<string>('');
 
     useEffect(() => {
-        setPlace(eventStore.filters.place);
-    }, [eventStore.filters.place])
+        setPlace(filters.place);
+    }, [filters.place])
 
     const handleChange = (e: any) => {
-        setPlaceFilter(e.target.value);
+        dispatch(setPlaceFilter(e.target.value));
     }
 
     return (

@@ -1,13 +1,14 @@
 import { Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, InputLabel, TextField } from "@mui/material";
 import React, { forwardRef, useState, useImperativeHandle, useRef } from "react";
-import useEvent from "../../store/hooks/useEvent";
 import NotificationDate from "./notificationTime";
 import { useSubscribeForEvent } from "../../fetch/useSubscribeForEvent";
+import { useSelector } from "react-redux";
+import { Event } from '../../../../shared/models/events';
 
 
 const SubscribeDialog = forwardRef((props: any, ref: any) => {
-    const eventStore = useEvent();
     const [openDialog, setOpenDialog] = useState<boolean>(false);
+    const event = useSelector((state: any) => state.selectedEvent as Event);
 
     const [email, setEmail] = useState<string>('');
     const [notificationDate, setNotificationDate] = useState<Date>(new Date());
@@ -38,14 +39,14 @@ const SubscribeDialog = forwardRef((props: any, ref: any) => {
     };
 
     const handleSubscribe = () => {
-        subscribe(eventStore.selectedEvent.uuid, email, notificationDate)
+        subscribe(event.uuid, email, notificationDate)
         setOpenDialog(false)
     }
 
     return (
         <Dialog open={openDialog}>
             <DialogTitle>
-                Subscribe to event: {eventStore.selectedEvent.title}
+                Subscribe to event: {event.title}
             </DialogTitle>
             <DialogContent>
                 <Container maxWidth="sm" sx={{ p: 5 }}>

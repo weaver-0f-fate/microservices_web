@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { FunctionComponent, PropsWithChildren } from 'react';
 import Layout from '../shared/layout/layout';
 import EventsCalendar from '../modules/events/eventsCalendar';
 import nestComponents from '../shared/utilities/nest-components';
 import theme from './theme';
 import { ThemeProvider } from '@mui/material';
-import { Provider as EventProvider } from '../modules/events/store/store';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import {
@@ -13,6 +12,8 @@ import {
 } from "react-router-dom";
 import AppRouter from './routing/appRouting';
 import { SnackbarProvider } from 'notistack';
+import { Provider as ReduxProvider } from 'react-redux'
+import store from './redux/store'
 
 const NotificationProvider = (props: any) => {
   return <SnackbarProvider {...props} maxSnack={3} sx={{ marginTop: "54px" }} anchorOrigin={{
@@ -22,10 +23,12 @@ const NotificationProvider = (props: any) => {
 };
 
 const AppProviders = nestComponents([
+  (props: any) => <LocalizationProvider dateAdapter={AdapterDayjs}>{props.children}</LocalizationProvider>,
+  (props: any) => <NotificationProvider>{props.children}</NotificationProvider>,
+  (props: any) => <ReduxProvider store={store}>{props.children}</ReduxProvider>,
   (props: any) => <ThemeProvider theme={theme}>{props.children}</ThemeProvider>,
-  (props: any) => <EventProvider>{props.children}</EventProvider>,
   (props: any) => <Layout>{props.children}</Layout>,
-]);
+]) as FunctionComponent<PropsWithChildren>;
 
 const App = () => {
 
@@ -37,13 +40,9 @@ const App = () => {
   ]);
 
   return (
-    <ThemeProvider theme={theme}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <Layout>
-            <RouterProvider router={router}/>
-        </Layout>
-      </LocalizationProvider>
-    </ThemeProvider>
+    <AppProviders>
+        <RouterProvider router={router}/>
+    </AppProviders>
   );
 }
 

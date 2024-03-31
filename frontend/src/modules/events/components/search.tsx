@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
 import { Autocomplete, Box, ListItem, TextField, Typography } from "@mui/material"
 import { SearchEvent, useSearchEvents } from '../fetch/useSearchEvents';
-import useSetEventUuid from '../store/hooks/eventDetails/useSetEventUuid';
+import { useDispatch } from 'react-redux';
+import { setSelectedEventUuid } from '../store/selectedEventSlice';
 
 interface SearchProps {
     openDialog: () => void
@@ -12,7 +13,7 @@ const Search = (props: SearchProps) => {
     const [searchString, setSearchString] = React.useState<string>('');
     const [options, setOptions] = React.useState<SearchEvent[]>([]);
     const [value, setValue] = React.useState<SearchEvent | null>(null);
-    const setEventUuid = useSetEventUuid();
+    const dispatch = useDispatch();
 
     useEffect(() => {
         if(searchString){
@@ -31,7 +32,7 @@ const Search = (props: SearchProps) => {
     const handleChanged = (event: any, newValue: SearchEvent | null) => {
         if(newValue){
             setValue(newValue);
-            setEventUuid(newValue ? newValue.uuid : '');
+            dispatch(setSelectedEventUuid(newValue ? newValue.uuid : ''))
             props.openDialog();
         }
     }

@@ -1,29 +1,30 @@
 import { Grid, InputLabel, TextField } from "@mui/material"
-import useEvent from "../../store/hooks/useEvent";
 import React, { useEffect, useRef } from 'react';
-import useSetPlace from "../../store/hooks/eventDetails/useSetPlace";
 import { useUpdateEvent } from "../../fetch/useUpdateEvent";
+import { useDispatch, useSelector } from "react-redux";
+import { Event } from '../../../../shared/models/events';
+import { setSelectedEventPlace } from "../../store/selectedEventSlice";
 
 
 const PlaceField = () => {
-    const eventStore = useEvent();
-    const setPlace = useSetPlace();
-    const disabled = eventStore.selectedEvent.uuid ? false : true;
+    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const dispatch = useDispatch();
+    const disabled = event.uuid ? false : true;
     const inputRef = useRef<any>();
     const updateEvent = useUpdateEvent();
 
     useEffect(() => {
-        if(eventStore.selectedEvent.place)
-            inputRef.current.value = eventStore.selectedEvent.place;
+        if(event.place)
+            inputRef.current.value = event.place;
     })
 
     const handlePlaceChange = (e : any) => {
         const value = e.target.value;
 
         if(value) {
-            updateEvent(eventStore.selectedEvent.uuid, '/place', value)
+            updateEvent(event.uuid, '/place', value)
             .then(() => {
-                setPlace(value);
+                dispatch(setSelectedEventPlace(value));
             })
         }
     }

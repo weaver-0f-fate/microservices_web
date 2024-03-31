@@ -1,25 +1,25 @@
 import React, { useEffect } from "react"
-import useSetTimeFilter from "../../store/hooks/filters/useSetTimeFilter";
 import { Grid, InputLabel } from "@mui/material";
 import { TimePicker } from "@mui/x-date-pickers";
 import dayjs, { Dayjs } from "dayjs";
-import useEvent from "../../store/hooks/useEvent";
+import { Filters, setTimeFilter } from "../../store/filtersSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 const TimeFilter = () => {
-    const setTimeFilter = useSetTimeFilter();
-    const eventStore = useEvent();
+    const filters = useSelector((state: any) => state.filters as Filters);
+    const dispatch = useDispatch();
     const [value, setValue] = React.useState<Dayjs | null>(dayjs());
 
     useEffect(() => {
-        if(eventStore.filters.time)
-            setValue(dayjs(eventStore.filters.time));
+        if(filters.time)
+            setValue(dayjs(filters.time));
         else
             setValue(null);
-    }, [eventStore.filters.time])
+    }, [filters.time])
 
     const handleChange = (e: any) => {
-        if(e)
-            setTimeFilter(e.toDate());
+        if(e) 
+            dispatch(setTimeFilter(e.toDate()));    
     }
 
     return (

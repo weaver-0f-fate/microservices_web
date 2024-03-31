@@ -1,30 +1,29 @@
 import { Grid, InputLabel, TextField } from "@mui/material"
-import useEvent from "../../store/hooks/useEvent";
 import React, { useEffect, useRef } from 'react';
-import useSetDescription from "../../store/hooks/eventDetails/useSetDescription";
 import { useUpdateEvent } from "../../fetch/useUpdateEvent";
+import { useDispatch, useSelector } from "react-redux";
+import { Event } from '../../../../shared/models/events';
+import { setSelectedEventDescription } from "../../store/selectedEventSlice";
 
 
 const DescriptionField = () => {
-    const eventStore = useEvent();
-    const setDescription = useSetDescription();
-    const disabled = eventStore.selectedEvent.uuid ? false : true;
+    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const dispatch = useDispatch();
+    const disabled = event.uuid ? false : true;
     const inputRef = useRef<any>();
     const updateEvent = useUpdateEvent();
 
     useEffect(() => {
-        if(eventStore.selectedEvent.description)
-            inputRef.current.value = eventStore.selectedEvent.description;
+        if(event.description)
+            inputRef.current.value = event.description;
     })
 
     const handleDescriptionChange = (e : any) => {
         const value = e.target.value;
-
         if(value) {
-            
-            updateEvent(eventStore.selectedEvent.uuid, '/description', value)
+            updateEvent(event.uuid, '/description', value)
             .then(() => {
-                setDescription(value);
+                dispatch(setSelectedEventDescription(value));
             })
         }
     }

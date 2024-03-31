@@ -1,29 +1,31 @@
 import { Grid, InputLabel, TextField } from "@mui/material"
-import useEvent from "../../store/hooks/useEvent";
 import React, { useEffect, useRef } from 'react';
-import useSetTitle from "../../store/hooks/eventDetails/useSetTitle";
 import { useUpdateEvent } from "../../fetch/useUpdateEvent";
-
+import { useDispatch, useSelector } from "react-redux";
+import { Event } from '../../../../shared/models/events';
+import { setEventTitle } from "../../store/eventsSlice";
+import { setSelectedEventTitle } from "../../store/selectedEventSlice";
 
 const TitleField = () => {
-    const eventStore = useEvent();
-    const setTitle = useSetTitle();
-    const disabled = eventStore.selectedEvent.uuid ? false : true;
+    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const dispatch = useDispatch();
+    const disabled = event.uuid ? false : true;
     const inputRef = useRef<any>();
     const updateEvent = useUpdateEvent();
 
     useEffect(() => {
-        if(eventStore.selectedEvent.title)
-            inputRef.current.value = eventStore.selectedEvent.title;
-    }, [eventStore.selectedEvent])
+        if(event.title)
+            inputRef.current.value = event.title;
+    }, [event])
 
     const handleTitleChange = (e : any) => {
         const value = e.target.value;
 
         if(value) {
-            updateEvent(eventStore.selectedEvent.uuid, '/title', value)
+            updateEvent(event.uuid, '/title', value)
             .then(() => {
-                setTitle(eventStore.selectedEvent.uuid, value);
+                dispatch(setSelectedEventTitle(value));
+                dispatch(setEventTitle({uuid: event.uuid, title: value}));
             })
             .catch(err => console.log(err));
         }

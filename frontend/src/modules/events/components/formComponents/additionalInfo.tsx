@@ -1,29 +1,29 @@
 import { Grid, InputLabel, TextField } from "@mui/material"
-import useEvent from "../../store/hooks/useEvent";
 import React, { useEffect, useRef } from 'react';
-import useSetAdditionalInfo from "../../store/hooks/eventDetails/useSetAdditionalInfo";
 import { useUpdateEvent } from "../../fetch/useUpdateEvent";
-
+import { useDispatch, useSelector } from "react-redux";
+import { Event } from '../../../../shared/models/events';
+import { setSelectedEventAdditionalInfo } from "../../store/selectedEventSlice";
 
 const AdditionalInfoField = () => {
-    const eventStore = useEvent();
-    const setAdditionalInfo = useSetAdditionalInfo();
-    const disabled = eventStore.selectedEvent.uuid ? false : true;
+    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const dispatch = useDispatch();
+    const disabled = event.uuid ? false : true;
     const inputRef = useRef<any>();
     const updateEvent = useUpdateEvent();
 
     useEffect(() => {
-        if(eventStore.selectedEvent.additionalInfo)
-            inputRef.current.value = eventStore.selectedEvent.additionalInfo;
-    }, [eventStore.selectedEvent.additionalInfo])
+        if(event.additionalInfo)
+            inputRef.current.value = event.additionalInfo;
+    }, [event.additionalInfo])
 
     const handleAdditionalInfoChange = (e : any) => {
         const value = e.target.value;
 
         if(value) {
-            updateEvent(eventStore.selectedEvent.uuid, '/additionalInfo', value)
+            updateEvent(event.uuid, '/additionalInfo', value)
             .then(() => {
-                setAdditionalInfo(value);
+                dispatch(setSelectedEventAdditionalInfo(value));
             })
             .catch(err => console.log(err));
         }

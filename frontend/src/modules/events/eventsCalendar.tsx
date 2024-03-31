@@ -3,18 +3,19 @@ import FullCalendar from "@fullcalendar/react";
 import { Box } from "@mui/material"
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
-import { Provider as EventProvider } from './store/store';
-import useSetEventUuid from './store/hooks/eventDetails/useSetEventUuid';
-import useSetEvents from './store/hooks/useSetEvents';
-import useEvent from './store/hooks/useEvent';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import rrulePlugin from '@fullcalendar/rrule'
 import EventDialog from './components/eventDialog';
 import './styles/eventsCalendar.css';
-import { useGetEvents } from './fetch/useGetEvents';
+import { EventResponse, useGetEvents } from './fetch/useGetEvents';
 import DisplayFilters from './components/filters/displayFilters';
 import CreateEventDialog from './components/createEventDialog';
 import Search from './components/search';
+import { getLocalDate } from '../../shared/utilities/dateFunctions';
+import { setEvents } from './store/eventsSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { Filters } from './store/filtersSlice';
+import { setSelectedEventUuid } from './store/selectedEventSlice';
 
 export interface EventBaseInfo {
     title: string;
@@ -26,24 +27,34 @@ export interface EventBaseInfo {
 }
 
 const EventsCalendar = () => {
-    const setEventUuid = useSetEventUuid();
-    const setEvents = useSetEvents();
-    const eventStore = useEvent();
     const getEvents = useGetEvents();
     const eventDialogRef = useRef<any>();
     const createEventDialogRef = useRef<any>();
+    const events = useSelector((state: any) => state.events);
+    const filters = useSelector((state: any) => state.filters as Filters);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        getEvents(eventStore.filters.category, eventStore.filters.place, eventStore.filters.time)
-            .then((result: any) => {
-                console.log(result)
-                setEvents(result);
+        getEvents(filters.category, filters.place, filters.time)
+            .then(result => {
+                const mappedResults = result.map((event: EventResponse) => {
+                    return {
+                        title: event.title,
+                        rrule: event.rrule ?? undefined,
+                        date: getLocalDate(event.date),
+                        category: event.category,
+                        place: event.place,
+                        uuid: event.uuid
+                    }
+                }) as EventBaseInfo[];
+
+                dispatch(setEvents(mappedResults));
             })
 
-    }, [eventStore.filters.category, eventStore.filters.place, eventStore.filters.time])
+    }, [filters.category, filters.place, filters.time])
 
     const handleEventClick = (event: any) => {
-        setEventUuid(event.event.extendedProps.uuid);
+        dispatch(setSelectedEventUuid(event.event.extendedProps.uuid));
         eventDialogRef.current.openDialog();
     }
 
@@ -57,7 +68,7 @@ const EventsCalendar = () => {
                         plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin, rrulePlugin]}
                         eventClick={handleEventClick}
                         initialView="dayGridMonth"
-                        events={eventStore.events}
+                        events={events}
                         eventTimeFormat={{
                             hour: '2-digit',
                             minute: '2-digit',
@@ -83,12 +94,4 @@ const EventsCalendar = () => {
     )
 }
 
-const EventsCalendarWithProvider = () => {
-    return (
-        <EventProvider>
-            <EventsCalendar />
-        </EventProvider>
-    )
-}
-
-export default EventsCalendarWithProvider;
+export default EventsCalendar;

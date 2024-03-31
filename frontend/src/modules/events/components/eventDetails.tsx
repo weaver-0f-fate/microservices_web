@@ -1,7 +1,5 @@
 import { Box, Container, Grid } from '@mui/material';
 import React, { useEffect } from 'react';
-import useEvent from '../store/hooks/useEvent';
-import useSetEvent from '../store/hooks/useSetEvent';
 import TitleField from './formComponents/title';
 import ImageUrlField from './formComponents/imageUrl';
 import PlaceField from './formComponents/place';
@@ -10,19 +8,32 @@ import DescriptionField from './formComponents/description';
 import DateField from './formComponents/date';
 import CategoryField from './formComponents/category';
 import { useGetEvent } from '../fetch/useGetEvent';
+import { useDispatch, useSelector } from 'react-redux';
+import { Event } from '../../../shared/models/events';
+import { setSelectedEvent } from '../store/selectedEventSlice';
+import { getLocalDate } from '../../../shared/utilities/dateFunctions';
 
 const EventDetails = () => {
-    const eventStore = useEvent();
-    const setEvent = useSetEvent();
+    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const dispatch = useDispatch();
     const getEvent = useGetEvent();
 
     useEffect(() => {
-        if(eventStore.selectedEvent) {
-            getEvent(eventStore.selectedEvent.uuid)
-                .then(result => setEvent(result))
+        if(event) {
+            getEvent(event.uuid)
+                .then(result => dispatch(setSelectedEvent({
+                    category: result.category,
+                    title: result.title,
+                    imageUrl: result.imageUrl,
+                    description: result.description,
+                    place: result.place,
+                    date: result.date ? getLocalDate(result.date) : new Date(),
+                    additionalInfo: result.additionalInfo,
+                    recurrency: result.recurrency,
+                } as Event)))
                 .catch(error => console.error(error))
         }
-    }, [eventStore.selectedEvent.uuid])
+    }, [event.uuid])
 
     return (
         <Box>
