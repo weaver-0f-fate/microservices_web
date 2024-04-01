@@ -1,16 +1,16 @@
 import React from "react";
 import { Button, Container, Dialog, DialogActions, DialogContent, DialogTitle, Grid, InputLabel, TextField } from "@mui/material"
 import { forwardRef, useState, useImperativeHandle } from "react";
-import useEvent from "../store/hooks/useEvent";
 import { PostEventProps, usePostEvent } from "../fetch/usePostEvent";
-import useAddEvent from "../store/hooks/useAddEvent";
 import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { getLocalDate } from "../../../shared/utilities/dateFunctions";
+import { useDispatch, useSelector } from "react-redux";
+import { Event } from '../../../shared/models/events';
+import { addEvent } from "../store/eventsSlice";
 
 
 const CreateEventDialog = forwardRef((props: any, ref: any) => {
-    const eventStore = useEvent();
     const [openDialog, setOpenDialog] = useState<boolean>(false);
     const [postEventProps, setPostEventProps] = useState<PostEventProps>({
         category: '',
@@ -22,7 +22,8 @@ const CreateEventDialog = forwardRef((props: any, ref: any) => {
         additionalInfo: '',
     } as PostEventProps);
     const postEvent = usePostEvent();
-    const addEvent = useAddEvent();
+    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const dispatch = useDispatch();
 
     useImperativeHandle(ref, () => ({
         openDialog() {
@@ -45,19 +46,22 @@ const CreateEventDialog = forwardRef((props: any, ref: any) => {
     const handleCreateEvent = () => {
         postEvent(postEventProps)
             .then(data => {
-                addEvent({
-                    title: data.title,
-                    date: getLocalDate(data.date),
-                    uuid: data.uuid,
-                    category: data.category,
-                    place: data.place
-                });
+                dispatch(addEvent(
+                    {
+                        title: data.title,
+                        date: getLocalDate(data.date),
+                        uuid: data.uuid,
+                        category: data.category,
+                        place: data.place
+                    }
+                
+                ));
             })
     }
 
     return (
         <Dialog open={openDialog}>
-            <DialogTitle>{eventStore.selectedEvent.title}</DialogTitle>
+            <DialogTitle>{event.title}</DialogTitle>
             <DialogContent>
                 <Container maxWidth="sm" sx={{ p: 5 }}>
                     <Grid container spacing={2}>

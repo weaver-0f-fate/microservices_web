@@ -19,10 +19,7 @@ export const usePostEvent = () => {
         (props: PostEventProps) : Promise<PostEventResponse> => 
             fetch(`http://localhost:7201/api/events`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+                body: {
                     category: props.category,
                     title: props.title,
                     imageUrl: props.imageUrl,
@@ -30,7 +27,7 @@ export const usePostEvent = () => {
                     place: props.place,
                     additionalInfo: props.additionalInfo,
                     date: props.date.toISOString()
-                }),
+                },
         }), [])
 }
 

@@ -1,50 +1,58 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Event } from '../../../shared/models/events';
 
-const initialState: Event = {
-    uuid: "",
-    category: "",
-    title: "",
-    imageUrl: "",
-    description: "",
-    place: "",
-    date: new Date(),
-    additionalInfo: "",  
+interface SelectedEventState {
+    event: Event
+}
+
+const initialState: SelectedEventState = {
+    event: {
+        uuid: "",
+        category: "",
+        title: "",
+        imageUrl: "",
+        description: "",
+        place: "",
+        date: new Date(),
+        additionalInfo: "",  
+    }
 }
 
 export const selectedEventSlice = createSlice({
   name: 'events',
   initialState,
   reducers: {
-    setSelectedEvent: (state: any, action) => {
-        state = action.payload;
+    setSelectedEvent: (state: SelectedEventState, action) => {
+        state.event = action.payload;
     },
-    setSelectedEventTitle: (state: any, action) => {
-        state.title = action.payload;
+    setSelectedEventTitle: (state: SelectedEventState, action) => {
+        state.event.title = action.payload;
     },
-    setSelectedEventImageUrl: (state: any, action) => {
-        state.imageUrl = action.payload;
+    setSelectedEventImageUrl: (state: SelectedEventState, action) => {
+        state.event.imageUrl = action.payload;
     },
-    setSelectedEventDescription: (state: any, action) => {
-        state.description = action.payload;
+    setSelectedEventDescription: (state: SelectedEventState, action) => {
+        state.event.description = action.payload;
     },
-    setSelectedEventPlace: (state: any, action) => {
-        state.place = action.payload;
+    setSelectedEventPlace: (state: SelectedEventState, action) => {
+        state.event.place = action.payload;
     },
-    setSelectedEventDate: (state: any, action) => {
-        state.date = action.payload;
+    setSelectedEventDate: (state: SelectedEventState, action) => {
+        state.event.date = action.payload;
     },
-    setSelectedEventAdditionalInfo: (state: any, action) => {
-        state.additionalInfo = action.payload;
+    setSelectedEventAdditionalInfo: (state: SelectedEventState, action) => {
+        state.event.additionalInfo = action.payload;
     },
-    setSelectedEventRecurrency: (state: any, action) => {
-        state.recurrency = action.payload;
+    setSelectedEventRecurrency: (state: SelectedEventState, action) => {
+        state.event.recurrency = action.payload;
     },
-    setSelectedEventCategory: (state: any, action) => {
-        state.category = action.payload;
+    setSelectedEventCategory: (state: SelectedEventState, action) => {
+        state.event.category = action.payload;
     },
-    setSelectedEventUuid: (state: any, action) => {
-        state.uuid = action.payload;
+    setSelectedEventUuid: (state: SelectedEventState, action) => {
+        console.log(action.payload)
+        console.log(state.event)
+        state.event.uuid = action.payload;
     }
   }
 })

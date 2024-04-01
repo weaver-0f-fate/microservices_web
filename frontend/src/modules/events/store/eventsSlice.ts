@@ -1,34 +1,40 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { EventBaseInfo } from '../eventsCalendar'
 
-const initialState: EventBaseInfo[] = []
+interface EventsState  {
+    events: EventBaseInfo[]
+}
+
+const initialState: EventsState = {
+    events: []
+}
 
 export const eventsSlice = createSlice({
   name: 'events',
   initialState: initialState,
   reducers: {
-    setEvents: (state: EventBaseInfo[], action) => {
-        state = action.payload;
+    setEvents: (state: EventsState, action) => {
+        state.events = action.payload;
     },
-    addEvent: (state: EventBaseInfo[], action) => {
-        state.push(action.payload);
+    addEvent: (state: EventsState, action) => {
+        state.events.push(action.payload);
     },
-    removeEvent: (state: EventBaseInfo[], action) => {
-        const index = state.findIndex(event => event.uuid === action.payload);
-        state.splice(index, 1);
+    removeEvent: (state: EventsState, action) => {
+        const index = state.events.findIndex(event => event.uuid === action.payload);
+        state.events.splice(index, 1);
     },
-    setEventTitle: (state: EventBaseInfo[], action) => {
-        let target = state.find(event => event.uuid === action.payload.eventUuid);
+    setEventTitle: (state: EventsState, action) => {
+        let target = state.events.find(event => event.uuid === action.payload.eventUuid);
         if(target)
             target.title = action.payload.title;
     },
-    setEventDate: (state: EventBaseInfo[], action) => {
-        let target = state.find(event => event.uuid === action.payload.eventUuid);
+    setEventDate: (state: EventsState, action) => {
+        let target = state.events.find(event => event.uuid === action.payload.eventUuid);
         if(target)
             target.date = action.payload.date;
     },
-    setEventRecurrency: (state: EventBaseInfo[], action) => {
-        let target = state.find(event => event.uuid === action.payload.eventUuid);
+    setEventRecurrency: (state: EventsState, action) => {
+        let target = state.events.find(event => event.uuid === action.payload.eventUuid);
         if(target)
             target.rrule = action.payload.recurrency;
     },

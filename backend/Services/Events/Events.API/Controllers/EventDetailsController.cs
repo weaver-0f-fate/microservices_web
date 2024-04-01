@@ -11,11 +11,11 @@ namespace Events.API.Controllers;
 
 [Route("api/events/{uuid}")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class EventDetailsController(IMediator mediator) : ApiController(mediator)
 {
     [HttpGet]
-    [Authorize(Roles = "Instructor, Admin")]
+    //[Authorize(Roles = "Instructor, Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Get([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
@@ -28,7 +28,7 @@ public class EventDetailsController(IMediator mediator) : ApiController(mediator
     }
 
     [HttpDelete]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
@@ -41,7 +41,7 @@ public class EventDetailsController(IMediator mediator) : ApiController(mediator
     }
 
     [HttpPatch]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Patch(
         [FromRoute] Guid uuid,

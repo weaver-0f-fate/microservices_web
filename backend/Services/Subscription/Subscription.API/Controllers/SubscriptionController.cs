@@ -7,11 +7,11 @@ namespace Subscription.API.Controllers;
 
 [Route("api/subscription")]
 [ApiController]
-[Authorize]
+//[Authorize]
 public class SubscriptionController(IMediator mediator) : ApiController(mediator)
 {
     [HttpPost]
-    [Authorize(Roles = "User, Instructor, Admin")]
+    //[Authorize(Roles = "User, Instructor, Admin")]
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> SubscribeUserAsync([FromBody] SubscribeUserRequest request, CancellationToken cancellationToken)
     {

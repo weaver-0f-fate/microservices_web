@@ -54,6 +54,7 @@ const EventsCalendar = () => {
     }, [filters.category, filters.place, filters.time])
 
     const handleEventClick = (event: any) => {
+        console.log(event.event.extendedProps.uuid)
         dispatch(setSelectedEventUuid(event.event.extendedProps.uuid));
         eventDialogRef.current.openDialog();
     }
