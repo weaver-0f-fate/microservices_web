@@ -9,13 +9,10 @@ export const useSubscribeForEvent = () => {
         (eventUuid: string, subscribedEmail: string, notificationTime: Date) => 
             fetch(`http://localhost:7201/api/subscription`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
+                body: {
                     eventUuid,
                     subscribedEmail,
                     notificationTime: notificationTime.toISOString()
-                }),
+                },
         }), [])
 }

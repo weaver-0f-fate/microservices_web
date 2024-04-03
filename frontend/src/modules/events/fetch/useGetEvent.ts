@@ -8,6 +8,7 @@ export const useGetEvent = () => {
         (eventUuid: string) : Promise<EventResponse> => 
             fetch(`http://localhost:7201/api/events/${eventUuid}`, {
                 method: 'GET',
+                nokNotification: "test"
         }), [])
 }
 

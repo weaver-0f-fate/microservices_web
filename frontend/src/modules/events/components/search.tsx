@@ -30,7 +30,8 @@ const Search = (props: SearchProps) => {
     }
 
     const handleChanged = (event: any, newValue: SearchEvent | null) => {
-        if(newValue){
+        if(newValue)
+        {
             setValue(newValue);
             dispatch(setSelectedEventUuid(newValue ? newValue.uuid : ''))
             props.openDialog();
@@ -56,7 +57,7 @@ const Search = (props: SearchProps) => {
                     <TextField {...params} label="Search" variant="outlined" fullWidth />
                 )}
                 renderOption={(props: any, option: SearchEvent) => (
-                    <ListItem {...props}>
+                    <ListItem {...props} key={option.uuid}>
                         <Box display='flex' sx={{flexDirection: 'column'}}>
                             <Typography>{option.title} {option.place ? `(${option.place})` : ''}</Typography>
                             {option.description ? <Typography variant='body2'>{option.description}</Typography> : ''}                  

@@ -2,12 +2,12 @@ import React, { useRef } from 'react';
 import { Button } from '@mui/material';
 import RecurrencyDialog from './recurrencyDialog';
 import { useSelector } from "react-redux";
-import { Event } from '../../../../shared/models/events';
+import { SelectedEventState } from '../../store/selectedEventSlice';
 
 const Recurrency = () => {
     const AddRecurrencyDialogRef = useRef<any>({});
-    const event = useSelector((state: any) => state.selectedEvent as Event);
-    const disabled = event.uuid ? false : true;
+    const event = useSelector((state: any) => state.selectedEvent as SelectedEventState);
+    const disabled = event.event.uuid ? false : true;
 
     const handleRecurrency = () => {
         AddRecurrencyDialogRef.current.openDialog();

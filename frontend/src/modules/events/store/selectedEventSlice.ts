@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Event } from '../../../shared/models/events';
 
-interface SelectedEventState {
+export interface SelectedEventState {
     event: Event
 }
 
@@ -50,8 +50,6 @@ export const selectedEventSlice = createSlice({
         state.event.category = action.payload;
     },
     setSelectedEventUuid: (state: SelectedEventState, action) => {
-        console.log(action.payload)
-        console.log(state.event)
         state.event.uuid = action.payload;
     }
   }

@@ -10,12 +10,12 @@ export const useUpdateEvent = () => {
             fetch(`http://localhost:7201/api/events/${eventUuid}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json-patch+json' },
-                body: JSON.stringify([
+                body: [
                     {
                         op: 'add',
                         path: path,
                         value: value
                     }
-                ]),
+                ],
         }), [])
 }

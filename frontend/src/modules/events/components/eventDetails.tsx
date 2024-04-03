@@ -10,30 +10,33 @@ import CategoryField from './formComponents/category';
 import { useGetEvent } from '../fetch/useGetEvent';
 import { useDispatch, useSelector } from 'react-redux';
 import { Event } from '../../../shared/models/events';
-import { setSelectedEvent } from '../store/selectedEventSlice';
+import { SelectedEventState, setSelectedEvent } from '../store/selectedEventSlice';
 import { getLocalDate } from '../../../shared/utilities/dateFunctions';
 
 const EventDetails = () => {
-    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const event = useSelector((state: any) => state.selectedEvent as SelectedEventState);
     const dispatch = useDispatch();
     const getEvent = useGetEvent();
 
     useEffect(() => {
         if(event) {
-            getEvent(event.uuid)
-                .then(result => dispatch(setSelectedEvent({
-                    category: result.category,
-                    title: result.title,
-                    imageUrl: result.imageUrl,
-                    description: result.description,
-                    place: result.place,
-                    date: result.date ? getLocalDate(result.date) : new Date(),
-                    additionalInfo: result.additionalInfo,
-                    recurrency: result.recurrency,
-                } as Event)))
+            getEvent(event.event.uuid)
+                .then(result => {
+                    dispatch(setSelectedEvent({
+                        uuid: result.uuid,
+                        category: result.category,
+                        title: result.title,
+                        imageUrl: result.imageUrl,
+                        description: result.description,
+                        place: result.place,
+                        date: result.date ? getLocalDate(result.date) : new Date(),
+                        additionalInfo: result.additionalInfo,
+                        recurrency: result.recurrency,
+                    } as Event))
+                })
                 .catch(error => console.error(error))
         }
-    }, [event.uuid])
+    }, [event.event.uuid])
 
     return (
         <Box>

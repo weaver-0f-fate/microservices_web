@@ -6,8 +6,8 @@ import { DateTimePicker } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { getLocalDate } from "../../../shared/utilities/dateFunctions";
 import { useDispatch, useSelector } from "react-redux";
-import { Event } from '../../../shared/models/events';
 import { addEvent } from "../store/eventsSlice";
+import { SelectedEventState } from "../store/selectedEventSlice";
 
 
 const CreateEventDialog = forwardRef((props: any, ref: any) => {
@@ -22,7 +22,7 @@ const CreateEventDialog = forwardRef((props: any, ref: any) => {
         additionalInfo: '',
     } as PostEventProps);
     const postEvent = usePostEvent();
-    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const event = useSelector((state: any) => state.selectedEvent as SelectedEventState);
     const dispatch = useDispatch();
 
     useImperativeHandle(ref, () => ({
@@ -61,7 +61,7 @@ const CreateEventDialog = forwardRef((props: any, ref: any) => {
 
     return (
         <Dialog open={openDialog}>
-            <DialogTitle>{event.title}</DialogTitle>
+            <DialogTitle>{event.event.title}</DialogTitle>
             <DialogContent>
                 <Container maxWidth="sm" sx={{ p: 5 }}>
                     <Grid container spacing={2}>

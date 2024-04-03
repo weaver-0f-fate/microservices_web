@@ -2,26 +2,25 @@ import { Grid, InputLabel, TextField } from "@mui/material"
 import React, { useEffect, useRef } from 'react';
 import { useUpdateEvent } from "../../fetch/useUpdateEvent";
 import { useDispatch, useSelector } from "react-redux";
-import { Event } from '../../../../shared/models/events';
-import { setSelectedEventCategory } from "../../store/selectedEventSlice";
+import { SelectedEventState, setSelectedEventCategory } from "../../store/selectedEventSlice";
 
 const CategoryField = () => {
-    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const event = useSelector((state: any) => state.selectedEvent as SelectedEventState);
     const dispatch = useDispatch();    
-    const disabled = event.uuid ? false : true;
+    const disabled = event.event.uuid ? false : true;
     const inputRef = useRef<any>();
     const updateEvent = useUpdateEvent();
     
     useEffect(() => {
-        if(event.category)
-            inputRef.current.value = event.category;
-    }, [event.category])
+        if(event.event.category)
+            inputRef.current.value = event.event.category;
+    }, [event])
 
     const handleCategoryChange = (e : any) => {
         const value = e.target.value;
 
         if(value) {
-            updateEvent(event.uuid, '/category', value)
+            updateEvent(event.event.uuid, '/category', value)
             .then(() => {
                 dispatch(setSelectedEventCategory(value));
             })

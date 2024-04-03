@@ -2,27 +2,26 @@ import { Grid, InputLabel, TextField } from "@mui/material"
 import React, { useEffect, useRef } from 'react';
 import { useUpdateEvent } from "../../fetch/useUpdateEvent";
 import { useDispatch, useSelector } from "react-redux";
-import { Event } from '../../../../shared/models/events';
-import { setSelectedEventImageUrl } from "../../store/selectedEventSlice";
+import { SelectedEventState, setSelectedEventImageUrl } from "../../store/selectedEventSlice";
 
 
 const ImageUrlField = () => {
-    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const event = useSelector((state: any) => state.selectedEvent as SelectedEventState);
     const dispatch = useDispatch();
-    const disabled = event.uuid ? false : true;
+    const disabled = event.event.uuid ? false : true;
     const inputRef = useRef<any>();
     const updateEvent = useUpdateEvent();
 
     useEffect(() => {
-        if(event.imageUrl)
-            inputRef.current.value = event.imageUrl;
+        if(event.event.imageUrl)
+            inputRef.current.value = event.event.imageUrl;
     })
 
     const handleImageUrlChange = (e : any) => {
         const value = e.target.value;
 
         if(value) {
-            updateEvent(event.uuid, '/imageUrl', value)
+            updateEvent(event.event.uuid, '/imageUrl', value)
             .then(() => {
                 dispatch(setSelectedEventImageUrl(value));
             })

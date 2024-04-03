@@ -7,13 +7,12 @@ import EndDate from './endDate';
 import { RRule } from 'rrule'
 import { useUpdateEvent } from '../../fetch/useUpdateEvent';
 import { useDispatch, useSelector } from "react-redux";
-import { Event } from '../../../../shared/models/events';
-import { setSelectedEventRecurrency } from '../../store/selectedEventSlice';
+import { SelectedEventState, setSelectedEventRecurrency } from '../../store/selectedEventSlice';
 import { setEventRecurrency } from '../../store/eventsSlice';
 
 const RecurrencyDialog = forwardRef((props: any, ref: any) => {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const event = useSelector((state: any) => state.selectedEvent as SelectedEventState);
     const dispatch = useDispatch();
     
     const [frequency, setFrequency] = useState<number>(3);
@@ -23,14 +22,14 @@ const RecurrencyDialog = forwardRef((props: any, ref: any) => {
     const updateEvent = useUpdateEvent();
 
     useEffect(() => {
-        if (event.recurrency) {
-            const rrule = RRule.fromString(event.recurrency);
+        if (event.event.recurrency) {
+            const rrule = RRule.fromString(event.event.recurrency);
             setFrequency(rrule.options.freq);
             setInterval(rrule.options.interval);
             setStartDate(rrule.options.dtstart);
             setEndDate(rrule.options.until);
         }
-    }, [event.recurrency])
+    }, [event.event.recurrency])
 
     useImperativeHandle(ref, () => ({
         openDialog() {
@@ -52,9 +51,9 @@ const RecurrencyDialog = forwardRef((props: any, ref: any) => {
         })
         const rrule = rule.toString();
 
-        updateEvent(event.uuid, '/recurrency', rrule)
+        updateEvent(event.event.uuid, '/recurrency', rrule)
         .then(() => {
-            updateRecurrency(event.uuid, rrule);
+            updateRecurrency(event.event.uuid, rrule);
         })
         
         setOpenDialog(false);
@@ -65,9 +64,9 @@ const RecurrencyDialog = forwardRef((props: any, ref: any) => {
     };
 
     const handleRemoveRecurrency = () => {
-        updateEvent(event.uuid, '/recurrency', '')
+        updateEvent(event.event.uuid, '/recurrency', '')
         .then(() => {
-            updateRecurrency(event.uuid, undefined);
+            updateRecurrency(event.event.uuid, undefined);
         })
         setOpenDialog(false)
     }
@@ -75,7 +74,7 @@ const RecurrencyDialog = forwardRef((props: any, ref: any) => {
     return (
         <Dialog open={openDialog}>
             <DialogTitle>
-                Add Recurrency to event: {event.title}
+                Add Recurrency to event: {event.event.title}
             </DialogTitle>
             <DialogContent>
                 <Container maxWidth="sm" sx={{ p: 5 }}>

@@ -3,12 +3,12 @@ import React, { forwardRef, useState, useImperativeHandle, useRef } from "react"
 import NotificationDate from "./notificationTime";
 import { useSubscribeForEvent } from "../../fetch/useSubscribeForEvent";
 import { useSelector } from "react-redux";
-import { Event } from '../../../../shared/models/events';
+import { SelectedEventState } from "../../store/selectedEventSlice";
 
 
 const SubscribeDialog = forwardRef((props: any, ref: any) => {
     const [openDialog, setOpenDialog] = useState<boolean>(false);
-    const event = useSelector((state: any) => state.selectedEvent as Event);
+    const event = useSelector((state: any) => state.selectedEvent as SelectedEventState);
 
     const [email, setEmail] = useState<string>('');
     const [notificationDate, setNotificationDate] = useState<Date>(new Date());
@@ -17,6 +17,7 @@ const SubscribeDialog = forwardRef((props: any, ref: any) => {
     const [isValidEmail, setIsValidEmail] = useState<boolean>(true);
 
     const handleValueChange = (event: any) => {
+        console.log(event.target.value)
         setEmail(event.target.value);
         
         // Regular expression to validate email format
@@ -39,14 +40,14 @@ const SubscribeDialog = forwardRef((props: any, ref: any) => {
     };
 
     const handleSubscribe = () => {
-        subscribe(event.uuid, email, notificationDate)
+        subscribe(event.event.uuid, email, notificationDate)
         setOpenDialog(false)
     }
 
     return (
         <Dialog open={openDialog}>
             <DialogTitle>
-                Subscribe to event: {event.title}
+                Subscribe to event: {event.event.title}
             </DialogTitle>
             <DialogContent>
                 <Container maxWidth="sm" sx={{ p: 5 }}>
