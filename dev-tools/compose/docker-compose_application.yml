@@ -1,9 +1,11 @@
+name: mweb_application
+
 services:
 
  gateway:
   image: gateway
   build: 
-   context: ./backend
+   context: ../../backend
    dockerfile: ./Gateways/Gateway.Web/Dockerfile
   ports:
    - 7201:80
@@ -14,7 +16,7 @@ services:
  identityapi:
   image: identity
   build: 
-   context: ./backend
+   context: ../../backend
    dockerfile: ./Services/Identity/Identity.API/Dockerfile
   ports:
    - 7202:80
@@ -25,7 +27,7 @@ services:
  eventsapi:
   image: events
   build: 
-   context: ./backend
+   context: ../../backend
    dockerfile: ./Services/Events/Events.API/Dockerfile
   ports:
    - 7203:80
@@ -36,7 +38,7 @@ services:
  notificationsapi:
   image: notification
   build: 
-   context: ./backend
+   context: ../../backend
    dockerfile: ./Services/Notification/Notification.API/Dockerfile
   ports:
    - 7205:80
@@ -47,7 +49,7 @@ services:
  subscriptionsapi:
   image: subscriptions
   build: 
-   context: ./backend
+   context: ../../backend
    dockerfile: ./Services/Subscription/Subscription.API/Dockerfile
   ports:
    - 7204:80
@@ -57,7 +59,7 @@ services:
 
  web:
   build: 
-   context: ./frontend
+   context: ../../frontend
    dockerfile: ./Dockerfile
   ports:
    - 3000:3000

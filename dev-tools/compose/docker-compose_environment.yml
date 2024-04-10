@@ -1,0 +1,54 @@
+name: mweb_environment
+
+networks:
+ mweb-develop:
+  driver: bridge
+
+services:
+ database:
+  container_name: sql-server-db
+  image: mcr.microsoft.com/mssql/server:2019-latest
+  ports:
+   - "5533:1433"
+  environment:
+   SA_PASSWORD: "Admin123!"
+   ACCEPT_EULA: "Y"
+  volumes:
+   - kyc-saga-sqldb:/var/opt/mssql
+
+ mongodb:
+  container_name: mongodb
+  image: mongo:6.0
+  volumes:
+   - ~/mongo:/data/db
+  ports:
+   - "27017:27017"
+
+ mweb-keycloak:
+  container_name: mweb-keycloak
+  image: quay.io/keycloak/keycloak:24.0.2
+  build:
+   context: images/keycloak
+   dockerfile: Dockerfile
+  user: root
+  command: start-dev --import-realm --health-enabled true --http-relative-path=/auth
+  ports:
+   - 8036:8080
+  networks:
+   - mweb-develop
+  environment:
+   KEYCLOAK_ADMIN: admin
+   KEYCLOAK_ADMIN_PASSWORD: admin
+  deploy:
+   resources:
+    limits:
+     memory: 512M
+  healthcheck:
+   # This creates a basic java file app that pings /health/live and checks wether the response is 200 or not.
+   test: '[ -f /tmp/HealthCheck.java ] || echo "public class HealthCheck { public static void main(String[] args) throws java.lang.Throwable { System.exit(java.net.HttpURLConnection.HTTP_OK == ((java.net.HttpURLConnection)new java.net.URL(args[0]).openConnection()).getResponseCode() ? 0 : 1); } }" > /tmp/HealthCheck.java && java /tmp/HealthCheck.java http://localhost:8080/health/live'
+   interval: 5s
+   timeout: 5s
+   retries: 10
+
+volumes:
+ kyc-saga-sqldb:
