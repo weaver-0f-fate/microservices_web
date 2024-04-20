@@ -1,14 +1,14 @@
 import { useCallback } from "react"
-import { usePublicFetch } from "../../../shared/fetch/use-fetch";
+import { useSecureFetch } from "../../../shared/fetch/use-fetch";
 
 export const useGetEvent = () => {
-    const fetch = usePublicFetch();
+    const fetch = useSecureFetch();
     
     return useCallback(
         (eventUuid: string) : Promise<EventResponse> => 
-            fetch(`http://localhost:7201/api/events/${eventUuid}`, {
+            fetch(`/events/${eventUuid}`, {
                 method: 'GET',
-                nokNotification: "test"
+                nokNotification: "Get event request failed"
         }), [])
 }
 

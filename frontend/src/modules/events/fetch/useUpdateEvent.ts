@@ -7,7 +7,7 @@ export const useUpdateEvent = () => {
 
     return useCallback(
         (eventUuid: string, path: string, value: any) => 
-            fetch(`http://localhost:7201/api/events/${eventUuid}`, {
+            fetch(`/events/${eventUuid}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json-patch+json' },
                 body: [

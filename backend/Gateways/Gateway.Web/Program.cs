@@ -1,6 +1,8 @@
 using Gateway.Web;
 using Lamar;
 using Lamar.Microsoft.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 using Ocelot.DependencyInjection;
 using Ocelot.Middleware;
 using Serilog;
@@ -32,8 +34,8 @@ try
     var services = builder.Services;
 
     ConfigureCors(services);
-    //ConfigureAuth(services, builder.Configuration);
-    services.AddOcelot();
+    ConfigureAuth(services);
+    services.AddOcelot(builder.Configuration);
 
 
     var app = builder.Build();
@@ -44,7 +46,16 @@ try
         //ignore
     }
 
+    app.UseRouting();
     app.UseCors("AllowSpecificOrigin");
+    app.UseAuthentication();
+    app.UseAuthorization();
+
+    app.UseEndpoints(endpoints =>
+    {
+        endpoints.MapControllers();
+    });
+
     app.UseOcelot().Wait();
 
     app.Run();
@@ -80,21 +91,55 @@ static void ConfigureCors(IServiceCollection services)
     });
 }
 
-static void ConfigureAuth(IServiceCollection services, IConfiguration config)
+static void ConfigureAuth(IServiceCollection services)
 {
-    var identityUrl = config.GetValue<string>("IdentityUrl");
-    const string authenticationProviderKey = "IdentityApiKey";
-    var audiences = new[] { "events", "notifications", "subscriptions" };
-
-
-    services.AddAuthentication()
-        .AddJwtBearer(authenticationProviderKey, x =>
+    services
+        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(cfg =>
         {
-            x.Authority = identityUrl;
-            x.RequireHttpsMetadata = false;
-            x.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+            cfg.Authority = "http://localhost:8036/auth/realms/mweb_personnel";
+            cfg.MetadataAddress = "http://localhost:8036/auth/realms/mweb_personnel/.well-known/openid-configuration";
+            cfg.RequireHttpsMetadata = false;
+
+            cfg.TokenValidationParameters = new TokenValidationParameters
             {
-                ValidAudiences = audiences
+                ValidateIssuer = true,
+                ValidIssuer = "http://localhost:8036/auth/realms/mweb_personnel",
+                ValidateAudience = true,
+                ValidAudiences = new[] { "frontend", "mobile", "swagger", "events", "notifications", "subscriptions", "account" },
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                ClockSkew = new TimeSpan(0, 0, 30)
+            };
+
+            cfg.Events = new JwtBearerEvents
+            {
+                OnTokenValidated = context =>
+                {
+                    //var handleTokenValidatedContext = context.HttpContext.RequestServices.GetService<IJwtBearerEventHandler<TokenValidatedContext>>();
+                    //if (handleTokenValidatedContext != null)
+                    //return handleTokenValidatedContext.Handle(context);
+
+                    return Task.CompletedTask;
+                },
+                OnAuthenticationFailed = context =>
+                {
+                    //var handleAuthenticationFailedContext = context.HttpContext.RequestServices.GetService<IJwtBearerEventHandler<AuthenticationFailedContext>>();
+                    //if (handleAuthenticationFailedContext != null)
+                    //    return handleAuthenticationFailedContext.Handle(context);
+
+                    return Task.CompletedTask;
+                },
+                OnMessageReceived = context =>
+                {
+                    // todo: with signalR we are sending access token as query param!
+                    // fixme: if we dont filter out, we log it, if we log it someone can steal it!!!
+                    // todo: ill stress one more time, DONT FORGET IT !
+                    var accessToken = context.Request.Query["access_token"];
+                    var path = context.HttpContext.Request.Path;
+
+                    return Task.CompletedTask;
+                }
             };
         });
 }

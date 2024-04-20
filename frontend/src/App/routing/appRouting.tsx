@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from '../../shared/layout/layout';
 import EventsCalendar from '../../modules/events/eventsCalendar';
+import Layout from '../layout/layout';
 
 const AppRouter = () => {
   return (

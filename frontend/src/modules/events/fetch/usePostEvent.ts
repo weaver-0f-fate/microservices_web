@@ -17,7 +17,7 @@ export const usePostEvent = () => {
 
     return useCallback(
         (props: PostEventProps) : Promise<PostEventResponse> => 
-            fetch(`http://localhost:7201/api/events`, {
+            fetch(`/events`, {
                 method: 'POST',
                 body: {
                     category: props.category,

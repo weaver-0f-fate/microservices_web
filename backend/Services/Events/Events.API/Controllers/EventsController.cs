@@ -12,7 +12,7 @@ namespace Events.API.Controllers;
 public class EventsController(IMediator mediator) : ApiController(mediator)
 {
     [HttpGet]
-    //[Authorize(Roles = "Guest, User, Instructor, Admin")]
+    //[Authorize(Roles = "admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Get(
         [FromQuery] string? category, 

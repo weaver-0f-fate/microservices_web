@@ -6,7 +6,7 @@ export const useSearchEvents = () => {
 
     return useCallback(
         (searchString?: string) : Promise<any> => 
-            fetch(`http://localhost:7201/api/events/search?searchString=${searchString}`, {
+            fetch(`/events/search?searchString=${searchString}`, {
                 method: 'GET', 
         }), [])
 }

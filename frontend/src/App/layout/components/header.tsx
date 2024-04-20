@@ -1,10 +1,14 @@
 import React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import { Box, Button } from '@mui/material';
+import Login from '../../auth/login';
+import { useAuth } from 'react-oidc-context';
+import Logout from '../../auth/logout';
 
 const Header = () => {
+  const auth = useAuth();
+
   return (
     <AppBar position="static">
       <Toolbar sx={{ display: 'flex', justifyContent: 'space-between'}}>
@@ -12,8 +16,11 @@ const Header = () => {
             <Button color="inherit">Events</Button>
         </Box>
         <Box>
-            <Button color="inherit">Login</Button>
-            <Button color="inherit">Register</Button>
+          {
+            auth.isAuthenticated 
+            ? <Logout />
+            : <Login />
+          }
         </Box>
       </Toolbar>
     </AppBar>

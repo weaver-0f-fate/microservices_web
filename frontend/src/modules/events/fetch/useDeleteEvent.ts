@@ -6,7 +6,7 @@ export const useDeleteEvent = () => {
 
     return useCallback(
         (eventUuid: string) : Promise<void> => 
-            fetch(`http://localhost:7201/api/events/${eventUuid}`, {
+            fetch(`/events/${eventUuid}`, {
                 method: 'DELETE',
         }), [])
 }

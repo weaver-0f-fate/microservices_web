@@ -6,7 +6,7 @@ export const useGetEvents = () => {
     const fetch = usePublicFetch();
     
     return (category?: string, place?: string, date?: Date) : Promise<EventResponse[]> => 
-        fetch(`http://localhost:7201/api/events`, {
+        fetch(`/events`, {
             method: 'GET',
             query: {
                 category,

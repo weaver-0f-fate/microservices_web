@@ -16,6 +16,7 @@ import { setEvents } from './store/eventsSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Filters } from './store/filtersSlice';
 import { setSelectedEventUuid } from './store/selectedEventSlice';
+import { AppConfiguration } from '../../App/types/appConfiguration';
 
 export interface EventBaseInfo {
     title: string;
@@ -33,6 +34,7 @@ const EventsCalendar = () => {
     const events = useSelector((state: any) => state.events);
     const filters = useSelector((state: any) => state.filters as Filters);
     const dispatch = useDispatch();
+    const config = useSelector((state: any) => state.appConfig as AppConfiguration);
 
     useEffect(() => {
         getEvents(filters.category, filters.place, filters.time)

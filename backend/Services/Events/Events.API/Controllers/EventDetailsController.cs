@@ -15,7 +15,7 @@ namespace Events.API.Controllers;
 public class EventDetailsController(IMediator mediator) : ApiController(mediator)
 {
     [HttpGet]
-    //[Authorize(Roles = "Instructor, Admin")]
+    [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Get([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {

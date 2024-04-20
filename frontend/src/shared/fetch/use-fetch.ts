@@ -160,8 +160,7 @@ const useFetch = () => {
 }
 
 const fetchFromApi = (path: string, options: FetchOptions, responseType: FetchResponseTypes) => {
-    //return fetch(`${process.env.REACT_APP_API}${path}${options.query && Object.keys(options.query).length !== 0 ? `?${stringify(options.query)}` : ''}`, options)
-    return fetch(`${path}${options.query && Object.keys(options.query).length !== 0 ? `?${stringify(options.query)}` : ''}`, options)
+    return fetch(`${process.env.REACT_APP_API}${path}${options.query && Object.keys(options.query).length !== 0 ? `?${stringify(options.query)}` : ''}`, options)
         .then(responseOk)
         .then(async response => {
             try {

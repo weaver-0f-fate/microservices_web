@@ -7,7 +7,7 @@ export const useSubscribeForEvent = () => {
 
     return useCallback(
         (eventUuid: string, subscribedEmail: string, notificationTime: Date) => 
-            fetch(`http://localhost:7201/api/subscription`, {
+            fetch(`/subscription`, {
                 method: 'POST',
                 body: {
                     eventUuid,
