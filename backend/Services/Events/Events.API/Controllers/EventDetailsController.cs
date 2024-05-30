@@ -12,14 +12,14 @@ namespace Events.API.Controllers;
 [Route("api/events/{uuid}")]
 [ApiController]
 //[Authorize]
-public class EventDetailsController(IMediator mediator) : ApiController(mediator)
+public class EventDetailsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     [Authorize(Roles = "Admin")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Get([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new GetEventRequest
+        var result = await mediator.Send(new GetEventRequest
         {
             Uuid = uuid
         }, cancellationToken);
@@ -32,7 +32,7 @@ public class EventDetailsController(IMediator mediator) : ApiController(mediator
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Delete([FromRoute] Guid uuid, CancellationToken cancellationToken)
     {
-        await Mediator.Send(new DeleteEventRequest
+        await mediator.Send(new DeleteEventRequest
         {
             Uuid = uuid
         }, cancellationToken);
@@ -51,7 +51,7 @@ public class EventDetailsController(IMediator mediator) : ApiController(mediator
         if (patchDoc is null)
             return BadRequest();
 
-        await Mediator.Send(new PatchEventRequest
+        await mediator.Send(new PatchEventRequest
         {
             EventUuid = uuid,
             PatchDoc = patchDoc

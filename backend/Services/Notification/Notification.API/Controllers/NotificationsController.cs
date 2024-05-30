@@ -9,7 +9,7 @@ namespace Notification.API.Controllers;
 [Route("api/notifications")]
 [ApiController]
 //[Authorize]
-public class NotificationsController(IMediator mediator) : ApiController(mediator)
+public class NotificationsController(IMediator mediator) : ControllerBase
 {
     [HttpGet("{notificationId}")]
     //[Authorize(Roles = "User, Instructor, Admin")]
@@ -17,7 +17,7 @@ public class NotificationsController(IMediator mediator) : ApiController(mediato
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetNotificationAsync(Guid notificationId, CancellationToken cancellationToken)
     {
-        var notification = await Mediator.Send(new GetNotificationRequest { NotificationId = notificationId }, cancellationToken);
+        var notification = await mediator.Send(new GetNotificationRequest { NotificationId = notificationId }, cancellationToken);
         return Ok(notification);
     }
 
@@ -26,7 +26,7 @@ public class NotificationsController(IMediator mediator) : ApiController(mediato
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddNotificationAsync(CreateEventNotificationRequest request, CancellationToken cancellationToken)
     {
-        var notificationId = await Mediator.Send(request, cancellationToken);
+        var notificationId = await mediator.Send(request, cancellationToken);
         var resourceUri = new Uri($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/api/notifications/{notificationId}");
         return Created(resourceUri, notificationId);
     }

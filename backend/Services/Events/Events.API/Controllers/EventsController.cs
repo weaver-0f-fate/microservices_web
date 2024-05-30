@@ -9,7 +9,7 @@ namespace Events.API.Controllers;
 
 [Route("api/events")]
 [ApiController]
-public class EventsController(IMediator mediator) : ApiController(mediator)
+public class EventsController(IMediator mediator) : ControllerBase
 {
     [HttpGet]
     //[Authorize(Roles = "admin")]
@@ -21,7 +21,7 @@ public class EventsController(IMediator mediator) : ApiController(mediator)
         CancellationToken cancellationToken)
     {
         var timeFilter = TimeSpan.TryParse(time, CultureInfo.CurrentCulture, out var t);
-        var result = await Mediator.Send(new GetEventsRequest
+        var result = await mediator.Send(new GetEventsRequest
         {
             Category = category,
             Place = place,
@@ -35,7 +35,7 @@ public class EventsController(IMediator mediator) : ApiController(mediator)
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> SearchEvents([FromQuery] string? searchString, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(new SearchEventsRequest
+        var result = await mediator.Send(new SearchEventsRequest
         {
             SearchString = searchString
         }, cancellationToken);
@@ -47,7 +47,7 @@ public class EventsController(IMediator mediator) : ApiController(mediator)
     [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> Post([FromBody] CreateEventRequest request, CancellationToken cancellationToken)
     {
-        var result = await Mediator.Send(request, cancellationToken);
+        var result = await mediator.Send(request, cancellationToken);
         var resourceUri = new Uri($"{HttpContext.Request.Scheme}://{HttpContext.Request.Host}/api/events/{result.Event.Uuid}");
         return Created(resourceUri, result.Event);
     }

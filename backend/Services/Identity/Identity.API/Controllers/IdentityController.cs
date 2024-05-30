@@ -10,7 +10,7 @@ namespace Identity.API.Controllers;
 
 [Route("api/identity")]
 [ApiController]
-public class IdentityController(IMediator mediator, IConfiguration configuration, UserManager<IdentityUser> userManager) : ApiController(mediator)
+public class IdentityController(IMediator mediator, IConfiguration configuration, UserManager<IdentityUser> userManager) : ControllerBase
 {
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] TestModel model)
