@@ -57,6 +57,17 @@ services:
    ASPNETCORE_ENVIRONMENT: "Docker"
    ASPNETCORE_URLS: "http://+:80"
 
+ algorithmsapi:
+  image: algorithms
+  build: 
+   context: ../../backend
+   dockerfile: ./Services/Algorithms/Algorithms.API/Dockerfile
+  ports:
+   - 7206:80
+  environment:
+   ASPNETCORE_ENVIRONMENT: "Docker"
+   ASPNETCORE_URLS: "http://+:80"
+
  web:
   build: 
    context: ../../frontend
