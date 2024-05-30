@@ -89,21 +89,25 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1A3488E4
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.API.Tests", "Services\Identity\Tests\Identity.API.Tests\Identity.API.Tests.csproj", "{78424817-197A-466D-B993-8CD9BD856E6F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Infrastructure", "Services\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj", "{A5D59546-CF75-4E73-88EA-746410FD2511}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Infrastructure", "Services\Identity\Identity.Infrastructure\Identity.Infrastructure.csproj", "{A5D59546-CF75-4E73-88EA-746410FD2511}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Infrastructure.Tests", "Services\Identity\Tests\Identity.Infrastructure.Tests\Identity.Infrastructure.Tests.csproj", "{C31CEC44-C221-4C1A-86CC-70EBADD96A48}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Infrastructure.Tests", "Services\Identity\Tests\Identity.Infrastructure.Tests\Identity.Infrastructure.Tests.csproj", "{C31CEC44-C221-4C1A-86CC-70EBADD96A48}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Domain", "Services\Identity\Identity.Domain\Identity.Domain.csproj", "{6A4F3C17-A686-405E-82C1-DA2735510374}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Domain", "Services\Identity\Identity.Domain\Identity.Domain.csproj", "{6A4F3C17-A686-405E-82C1-DA2735510374}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Application", "Services\Identity\Identity.Application\Identity.Application.csproj", "{9C5FE389-B6D7-40F8-9026-4A0AA1D2239F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Application", "Services\Identity\Identity.Application\Identity.Application.csproj", "{9C5FE389-B6D7-40F8-9026-4A0AA1D2239F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Application.Core", "Services\Identity\Identity.Application.Core\Identity.Application.Core.csproj", "{9DD09F18-CC67-4598-91B1-F90C5AE46C07}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Application.Core", "Services\Identity\Identity.Application.Core\Identity.Application.Core.csproj", "{9DD09F18-CC67-4598-91B1-F90C5AE46C07}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Application.Tests", "Services\Identity\Tests\Identity.Application.Tests\Identity.Application.Tests.csproj", "{7DDD8441-06FC-4046-A9FF-2FB0A7849E39}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Application.Tests", "Services\Identity\Tests\Identity.Application.Tests\Identity.Application.Tests.csproj", "{7DDD8441-06FC-4046-A9FF-2FB0A7849E39}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Application.Core.Tests", "Services\Identity\Tests\Identity.Application.Core.Tests\Identity.Application.Core.Tests.csproj", "{555733DB-7105-407C-94E6-0F943CADA317}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Application.Core.Tests", "Services\Identity\Tests\Identity.Application.Core.Tests\Identity.Application.Core.Tests.csproj", "{555733DB-7105-407C-94E6-0F943CADA317}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Identity.Domain.Tests", "Services\Identity\Tests\Identity.Domain.Tests\Identity.Domain.Tests.csproj", "{CA8F59BB-F368-4FFB-B5D6-EA787CFC1E55}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Identity.Domain.Tests", "Services\Identity\Tests\Identity.Domain.Tests\Identity.Domain.Tests.csproj", "{CA8F59BB-F368-4FFB-B5D6-EA787CFC1E55}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Algorithms", "Algorithms", "{B3B6B8F1-D824-4C1D-9B2B-D314A67DD33C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Algorithms.API", "Services\Algorithms\Algorithms.API\Algorithms.API.csproj", "{DAD36253-4C65-4B35-8193-61A7D6BB7BEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -275,6 +279,10 @@ Global
 		{CA8F59BB-F368-4FFB-B5D6-EA787CFC1E55}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA8F59BB-F368-4FFB-B5D6-EA787CFC1E55}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA8F59BB-F368-4FFB-B5D6-EA787CFC1E55}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAD36253-4C65-4B35-8193-61A7D6BB7BEE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAD36253-4C65-4B35-8193-61A7D6BB7BEE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAD36253-4C65-4B35-8193-61A7D6BB7BEE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAD36253-4C65-4B35-8193-61A7D6BB7BEE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -329,6 +337,8 @@ Global
 		{7DDD8441-06FC-4046-A9FF-2FB0A7849E39} = {1A3488E4-7D40-4180-9458-E9ECAB895933}
 		{555733DB-7105-407C-94E6-0F943CADA317} = {1A3488E4-7D40-4180-9458-E9ECAB895933}
 		{CA8F59BB-F368-4FFB-B5D6-EA787CFC1E55} = {1A3488E4-7D40-4180-9458-E9ECAB895933}
+		{B3B6B8F1-D824-4C1D-9B2B-D314A67DD33C} = {7C53EC59-6D50-4189-BC81-D6A77E11EE54}
+		{DAD36253-4C65-4B35-8193-61A7D6BB7BEE} = {B3B6B8F1-D824-4C1D-9B2B-D314A67DD33C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {E49A82BE-1384-4BC2-8DCE-20B9CD972BCE}

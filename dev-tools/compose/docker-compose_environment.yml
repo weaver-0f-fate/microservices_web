@@ -49,6 +49,45 @@ services:
    interval: 5s
    timeout: 5s
    retries: 10
+   
+ mweb_logs_seq:
+  image: datalust/seq
+  container_name: mweb_logs_seq
+  ports:
+   - 5341:80
+  environment:
+   ACCEPT_EULA: Y
+  networks:
+   - mweb-develop
+  mem_limit: 128M
+  
+ mweb_postgres:
+  image: postgres:13.1-alpine
+  container_name: mweb_postgres
+  ports:
+   - 5433:5432
+  environment:
+   POSTGRES_USER: postgres
+   POSTGRES_PASSWORD: password
+   POSTGRES_DB: postgres
+   POSTGRES_INITDB_ARGS: "--locale=et_EE.utf8"
+  networks:
+   - mweb-develop
+  mem_limit: 256M
+  
+ rabbit:
+  image: rabbitmq
+  container_name: mweb_rabbit
+  ports:
+   - 5672:5672
+   - 15672:15672
+  hostname: localhost
+  environment:
+   RABBITMQ_DEFAULT_USER: guest
+   RABBITMQ_DEFAULT_PASS: guest
+  networks:
+   - mweb-develop
+  mem_limit: 256M
 
 volumes:
  kyc-saga-sqldb:
