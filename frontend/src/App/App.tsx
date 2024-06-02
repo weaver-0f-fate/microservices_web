@@ -19,6 +19,7 @@ import { AppConfiguration } from './types/appConfiguration';
 import { AppConfigurationResponse, useGetConfiguration } from './fetch/fetchConfiguration';
 import { setAppConfig } from './store/appConfigSlice';
 import LoadingBackground from './components/loadingBackground';
+import AppRouter from './routing/appRouting';
 
 const NotificationProvider = (props: any) => {
   return <SnackbarProvider {...props} maxSnack={3} sx={{ marginTop: "54px" }} anchorOrigin={{
@@ -107,9 +108,7 @@ const App = () => {
   if (loadingState === LoadingState.Finished && config.keycloakConf !== undefined) {
       return (
           <AuthProvider {...config.keycloakConf} userStore={config.keycloakConf.store} stateStore={config.keycloakConf.store}>
-              <Layout>
-                  <RouterProvider router={router}/>
-              </Layout>
+              <AppRouter />
           </AuthProvider>
       );
   } else {
