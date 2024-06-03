@@ -18,7 +18,7 @@ services:
 
  mongodb:
   container_name: mongodb
-  image: mongo:6.0
+  image: mongo:latest
   volumes:
    - ~/mongo:/data/db
   ports:
@@ -26,12 +26,8 @@ services:
 
  mweb-keycloak:
   container_name: mweb-keycloak
-  image: quay.io/keycloak/keycloak:24.0.2
-  build:
-   context: images/keycloak
-   dockerfile: Dockerfile
+  image: quay.io/keycloak/keycloak:latest
   user: root
-  command: start-dev --import-realm --health-enabled true --http-relative-path=/auth
   ports:
    - 8036:8080
   networks:
@@ -49,6 +45,8 @@ services:
    interval: 5s
    timeout: 5s
    retries: 10
+  command:
+   start-dev
    
  mweb_logs_seq:
   image: datalust/seq
@@ -62,15 +60,13 @@ services:
   mem_limit: 128M
   
  mweb_postgres:
-  image: postgres:13.1-alpine
+  image: postgres:latest
   container_name: mweb_postgres
   ports:
-   - 5433:5432
+   - 5432:5432
   environment:
    POSTGRES_USER: postgres
    POSTGRES_PASSWORD: password
-   POSTGRES_DB: postgres
-   POSTGRES_INITDB_ARGS: "--locale=et_EE.utf8"
   networks:
    - mweb-develop
   mem_limit: 256M
