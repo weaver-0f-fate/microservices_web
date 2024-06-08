@@ -15,4 +15,12 @@
     <changeSet id="createAlgorithmsDatabase" author="system" runInTransaction="false">
 		<sql>CREATE DATABASE algorithms;</sql>
 	</changeSet>
+
+    <changeSet id="createEventsDatabase" author="system" runInTransaction="false">
+		<sql>CREATE DATABASE events;</sql>
+	</changeSet>
+	
+    <changeSet id="createNotificationsDatabase" author="system" runInTransaction="false">
+		<sql>CREATE DATABASE notifications;</sql>
+	</changeSet>
 </databaseChangeLog>
