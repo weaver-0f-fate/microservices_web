@@ -1,27 +1,25 @@
-﻿using Algorithms.Domain.Aggregates;
+﻿using Algorithms.Domain.Aggregates.AlgorithmAggregate;
 using Algorithms.Infrastructure.Configuration;
 using Algorithms.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-
 namespace Algorithms.Infrastructure.Schemas.Algorithms;
 
-public class PersonConfiguration : IEntityTypeConfiguration<Person>
+public class AlgorithmConfiguration : IEntityTypeConfiguration<Algorithm>
 {
     private readonly Dialect _dialect;
 
-    public PersonConfiguration(Dialect dialect)
+    public AlgorithmConfiguration(Dialect dialect)
     {
         _dialect = dialect;
     }
 
-    public void Configure(EntityTypeBuilder<Person> builder)
+    public void Configure(EntityTypeBuilder<Algorithm> builder)
     {
         if (builder is null)
             throw new ArgumentNullException(nameof(builder));
 
-        var map = new EntityMapper<Person>(builder, _dialect);
+        var map = new EntityMapper<Algorithm>(builder, _dialect);
         map.ToTable();
     }
 }
-

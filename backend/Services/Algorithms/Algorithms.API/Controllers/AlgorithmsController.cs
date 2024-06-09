@@ -1,4 +1,5 @@
 ﻿using Algorithms.Domain.Aggregates;
+using Algorithms.Domain.Aggregates.AlgorithmAggregate;
 using Algorithms.Domain.Aggregates.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,20 +7,20 @@ namespace Algorithms.API.Controllers;
 
 [Route("api/algorithms")]
 [ApiController]
-public class AlgorithmsController(IPersonRepository personRepository) : ControllerBase
+public class AlgorithmsController(IAlgorithmsRepository algorithmRepository) : ControllerBase
 {
 
     public async Task<IActionResult> GetAsync(CancellationToken token)
     {
-        var person = new Person(Guid.NewGuid(), "John Doe", "123 Main St", "Apt 1", "Anytown", "US", "john.doe@gmail.com");
+        var algorithm = new Algorithm("MyNewAlgorithm");
 
-        personRepository.Add(person);
+        var newAlgorithm = await algorithmRepository.AddAsync(algorithm, token);
 
-        await personRepository.UnitOfWork.SaveChangesAsync(token);
+        await algorithmRepository.UnitOfWork.SaveChangesAsync(token);
 
         var result = new
         {
-            personUuid = person.Uuid
+            algorithmUuid = algorithm.Uuid
         };
         return Ok(result);
     }

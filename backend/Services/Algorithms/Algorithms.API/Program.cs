@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using Algorithms.API;
+using Algorithms.API.Authentication;
 using Algorithms.API.Middleware;
 using Algorithms.Domain.Core.User;
 using Algorithms.Infrastructure.Configuration;
@@ -35,6 +36,8 @@ try
         cfg.RegisterServicesFromAssemblyContaining(typeof(Assembly));
         cfg.RegisterServicesFromAssemblyContaining(typeof(Program));
     });
+
+    services.AddScoped(x => new UserContext());
 
     ConfigureAuth(services);
 
@@ -75,6 +78,9 @@ static void ConfigureContainer(ServiceRegistry services, IConfiguration configur
     services.Configure<UserConfig>(configuration.GetSection("User"));
 
     services.ForConcreteType<WriteDatabaseContext>().Configure.Scoped();
+
+    services.For(typeof(IJwtBearerEventHandler<TokenValidatedContext>)).Use(typeof(UserTokenValidatedContextHandler));
+    services.For(typeof(IJwtBearerEventHandler<AuthenticationFailedContext>)).Use(typeof(UserTokenAuthenticationFailedHandler));
 }
 
 static void ConfigureAuth(IServiceCollection services)
@@ -103,9 +109,9 @@ static void ConfigureAuth(IServiceCollection services)
                 OnTokenValidated = context =>
                 {
                     var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
-                    //var handleTokenValidatedContext = context.HttpContext.RequestServices.GetService<IJwtBearerEventHandler<TokenValidatedContext>>();
-                    //if (handleTokenValidatedContext != null)
-                    //return handleTokenValidatedContext.Handle(context);
+                    var handleTokenValidatedContext = context.HttpContext.RequestServices.GetService<IJwtBearerEventHandler<TokenValidatedContext>>();
+                    if (handleTokenValidatedContext != null)
+                        return handleTokenValidatedContext.Handle(context);
 
                     return Task.CompletedTask;
                 },
@@ -115,9 +121,9 @@ static void ConfigureAuth(IServiceCollection services)
                 },
                 OnAuthenticationFailed = context =>
                 {
-                    //var handleAuthenticationFailedContext = context.HttpContext.RequestServices.GetService<IJwtBearerEventHandler<AuthenticationFailedContext>>();
-                    //if (handleAuthenticationFailedContext != null)
-                    //    return handleAuthenticationFailedContext.Handle(context);
+                    var handleAuthenticationFailedContext = context.HttpContext.RequestServices.GetService<IJwtBearerEventHandler<AuthenticationFailedContext>>();
+                    if (handleAuthenticationFailedContext != null)
+                        return handleAuthenticationFailedContext.Handle(context);
 
                     return Task.CompletedTask;
                 },

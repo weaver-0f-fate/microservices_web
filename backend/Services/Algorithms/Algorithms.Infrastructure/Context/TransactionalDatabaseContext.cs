@@ -13,44 +13,26 @@ using Algorithms.Domain.Providers;
 
 namespace Algorithms.Infrastructure.Context;
 
-public class TransactionalDatabaseContext : DbContext, IUnitOfWork
+public class TransactionalDatabaseContext(
+    IOptions<PostgreSqlConfigration> databaseConfiguration,
+    IOptions<EventsConfiguration> eventsConfiguration,
+    IMediator mediator,
+    IUserIdProvider userIdProvider,
+    ILogger? logger = null,
+    ILoggerFactory? loggerFactory = null) : DbContext, IUnitOfWork
 {
-    private readonly string _connectionString;
-
-    private readonly IMediator _mediator;
-
+    private readonly string _connectionString = databaseConfiguration.Value.GetConnectionString();
     /// <summary>
     /// Tracks the count of domain events published during the lifetime of this context.
     /// </summary>
     public int CountOfEventsPublished { get; set; }
 
-    private readonly int _publishedEventsLimit;
+    private readonly int _publishedEventsLimit = eventsConfiguration.Value.PublishingLimit;
 
     private IDbContextTransaction CurrentTransaction { get; set; }
 
     public bool HasActiveTransaction => CurrentTransaction != null;
     public Guid? CurrentTransactionId => CurrentTransaction?.TransactionId;
-
-    private readonly IUserIdProvider _userIdProvider;
-    private readonly ILogger? _logger;
-    private readonly ILoggerFactory? _loggerFactory;
-
-    public TransactionalDatabaseContext(
-        IOptions<PostgreSqlConfigration> databaseConfiguration,
-        IOptions<EventsConfiguration> eventsConfiguration,
-        IMediator mediator,
-        IUserIdProvider userIdProvider,
-        ILogger? logger = null,
-        ILoggerFactory? loggerFactory = null
-    )
-    {
-        _connectionString = databaseConfiguration.Value.GetConnectionString();
-        _publishedEventsLimit = eventsConfiguration.Value.PublishingLimit;
-        _mediator = mediator;
-        _userIdProvider = userIdProvider;
-        _logger = logger;
-        _loggerFactory = loggerFactory;
-    }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -59,7 +41,7 @@ public class TransactionalDatabaseContext : DbContext, IUnitOfWork
             .UseSnakeCaseNamingConvention();
 #if DEBUG
         optionsBuilder
-            .UseLoggerFactory(_loggerFactory)
+            .UseLoggerFactory(loggerFactory)
             .EnableSensitiveDataLogging();
 #endif
     }
@@ -83,10 +65,10 @@ public class TransactionalDatabaseContext : DbContext, IUnitOfWork
             entity.Entity.ClearDomainEvents();
 
         foreach (var domainEvent in domainEvents)
-            await _mediator.Publish(domainEvent, cancellationToken);
+            await mediator.Publish(domainEvent, cancellationToken);
 
         foreach (var ev in domainEvents)
-            _logger.LogInformation("Published domain event {Event}", ev.GetType().Name);
+            logger.LogInformation("Published domain event {Event}", ev.GetType().Name);
     }
 
     public new int SaveChanges()
@@ -159,7 +141,7 @@ public class TransactionalDatabaseContext : DbContext, IUnitOfWork
     private void HandleAudit(EntityEntry entityEntry)
     {
         var entity = entityEntry.Entity;
-        var userId = _userIdProvider.Get();
+        var userId = userIdProvider.Get();
 
         if (entity is not IAudit auditEntity || userId == null)
             return;

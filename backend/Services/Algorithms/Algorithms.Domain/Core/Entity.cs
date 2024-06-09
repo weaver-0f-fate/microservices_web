@@ -5,14 +5,13 @@ namespace Algorithms.Domain.Core;
 public class Entity
 {
     private int? _requestedHashCode;
-    public virtual int Id { get; protected set; }
+    public Guid Uuid { get; protected set; } = Guid.NewGuid();
 
     private List<INotification> _domainEvents = [];
     public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
 
     public void AddDomainEvent(INotification eventItem)
     {
-        _domainEvents = _domainEvents ?? [];
         _domainEvents.Add(eventItem);
     }
 
@@ -28,7 +27,7 @@ public class Entity
 
     public bool IsTransient()
     {
-        return Id == default;
+        return Uuid == default;
     }
 
     public override bool Equals(object obj)
@@ -47,7 +46,7 @@ public class Entity
         if (item.IsTransient() || IsTransient())
             return false;
         else
-            return item.Id == Id;
+            return item.Uuid == Uuid;
     }
 
     public override int GetHashCode()
@@ -55,7 +54,7 @@ public class Entity
         if (!IsTransient())
         {
             if (!_requestedHashCode.HasValue)
-                _requestedHashCode = Id.GetHashCode() ^ 31; // XOR for random distribution (http://blogs.msdn.com/b/ericlippert/archive/2011/02/28/guidelines-and-rules-for-gethashcode.aspx)
+                _requestedHashCode = Uuid.GetHashCode() ^ 31;
 
             return _requestedHashCode.Value;
         }

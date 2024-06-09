@@ -32,7 +32,7 @@ public class EntityMapper<T> where T : Entity
 
         if (!IsDerivedType())
         {
-            builder.HasKey(x => x.Id);
+            builder.HasKey(x => x.Uuid);
             MapSoftDeleteQueryFilter();
         }
 
@@ -134,7 +134,6 @@ public class EntityMapper<T> where T : Entity
     {
         return
             typeof(T).BaseType != typeof(Entity) &&
-            typeof(T).BaseType != typeof(EntityWithUuid) &&
             typeof(T).BaseType != typeof(TrackedEntity) &&
             typeof(T).BaseType != typeof(AggregateRoot) &&
             typeof(T).BaseType != typeof(TrackedAggregateRoot);

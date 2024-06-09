@@ -1,4 +1,4 @@
-﻿using Algorithms.Domain.Aggregates;
+﻿using Algorithms.Domain.Aggregates.AlgorithmAggregate;
 using Algorithms.Domain.Providers;
 using Algorithms.Infrastructure.Configuration;
 using MediatR;
@@ -11,8 +11,7 @@ namespace Algorithms.Infrastructure.Context;
 public sealed class WriteDatabaseContext : TransactionalDatabaseContext
 {
 
-    internal DbSet<Person> Person => Set<Person>();
-    internal DbSet<Company> Company => Set<Company>();
+    internal DbSet<Algorithm> Algorithms => Set<Algorithm>();
 
     public WriteDatabaseContext(
         IOptions<PostgreSqlConfigration> postgreSqlConfiguration,
