@@ -89,14 +89,14 @@ static void ConfigureAuth(IServiceCollection services)
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(cfg =>
         {
-            cfg.Authority = "http://localhost:8036/auth/realms/mweb_personnel";
-            cfg.MetadataAddress = "http://localhost:8036/auth/realms/mweb_personnel/.well-known/openid-configuration";
+            cfg.Authority = "http://localhost:8036/realms/mweb_personnel";
+            cfg.MetadataAddress = "http://localhost:8036/realms/mweb_personnel/.well-known/openid-configuration";
             cfg.RequireHttpsMetadata = false;
 
             cfg.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = "http://localhost:8036/auth/realms/mweb_personnel",
+                ValidIssuer = "http://localhost:8036/realms/mweb_personnel",
                 ValidateAudience = true,
                 ValidAudiences = new[] { "frontend", "mobile", "swagger", "events", "notifications", "subscriptions", "account" },
                 ValidateIssuerSigningKey = true,

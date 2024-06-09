@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MediatR" Version="12.2.0" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Algorithms.Application.Core\Algorithms.Application.Core.csproj" />
   </ItemGroup>
 

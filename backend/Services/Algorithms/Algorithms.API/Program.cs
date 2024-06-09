@@ -1,11 +1,16 @@
 using System.Security.Claims;
 using Algorithms.API;
 using Algorithms.API.Middleware;
+using Algorithms.Domain.Core.User;
+using Algorithms.Infrastructure.Configuration;
+using Algorithms.Infrastructure.Context;
 using Lamar;
 using Lamar.Microsoft.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
+
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -15,20 +20,13 @@ Log.Logger = new LoggerConfiguration()
 try
 {
     var builder = WebApplication.CreateBuilder(args);
-    builder.Host.UseLamar(ConfigureContainer);
+    builder.Host.UseLamar(services => ConfigureContainer(services, builder.Configuration));
     var services = builder.Services;
-
 
     services.AddControllers(options =>
     {
         //options.Filters.Add<NotFoundExceptionFilterAttribute>();
     }).AddNewtonsoftJson();
-
-    //services.AddAutoMapper(typeof(EventProfile));
-
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-                           ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-    //await services.AddDbContext(connectionString);
 
     //services.Configure<AuditLogDatabaseSettings>(builder.Configuration.GetSection("AuditLoggingDatabase"));
 
@@ -62,10 +60,8 @@ finally
     Log.CloseAndFlush();
 }
 
-static void ConfigureContainer(ServiceRegistry services)
+static void ConfigureContainer(ServiceRegistry services, IConfiguration configuration)
 {
-    //services.For<IRepository<Event>>().Use<EventsRepository<Event>>();
-
     services.Scan(scan => { scan.TheCallingAssembly(); scan.WithDefaultConventions(); });
     services.Scan(scan => { scan.AssemblyContainingType<Algorithms.Application.Assembly>(); scan.WithDefaultConventions(); });
     services.Scan(scan => { scan.AssemblyContainingType<Algorithms.Infrastructure.Assembly>(); scan.WithDefaultConventions(); });
@@ -73,6 +69,12 @@ static void ConfigureContainer(ServiceRegistry services)
     services.Scan(scan => { scan.AssemblyContainingType<Algorithms.Application.Core.Assembly>(); scan.WithDefaultConventions(); });
 
     services.Scan(scan => { scan.AssemblyContainingType<Assembly>(); scan.WithDefaultConventions(); });
+
+    services.Configure<PostgreSqlConfigration>(configuration.GetSection("Database"));
+    services.Configure<EventsConfiguration>(configuration.GetSection("Events"));
+    services.Configure<UserConfig>(configuration.GetSection("User"));
+
+    services.ForConcreteType<WriteDatabaseContext>().Configure.Scoped();
 }
 
 static void ConfigureAuth(IServiceCollection services)
@@ -81,14 +83,14 @@ static void ConfigureAuth(IServiceCollection services)
         .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(cfg =>
         {
-            cfg.Authority = "http://localhost:8036/auth/realms/mweb_personnel";
-            cfg.MetadataAddress = "http://localhost:8036/auth/realms/mweb_personnel/.well-known/openid-configuration";
+            cfg.Authority = "http://localhost:8036/realms/mweb_personnel";
+            cfg.MetadataAddress = "http://localhost:8036/realms/mweb_personnel/.well-known/openid-configuration";
             cfg.RequireHttpsMetadata = false;
 
             cfg.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,
-                ValidIssuer = "http://localhost:8036/auth/realms/mweb_personnel",
+                ValidIssuer = "http://localhost:8036/realms/mweb_personnel",
                 ValidateAudience = true,
                 ValidAudiences = new[] { "frontend", "mobile", "swagger", "events", "notifications", "subscriptions", "account" },
                 ValidateIssuerSigningKey = true,
