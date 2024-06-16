@@ -10,18 +10,32 @@ namespace Algorithms.API.Controllers;
 public class AlgorithmsController(IAlgorithmsRepository algorithmRepository) : ControllerBase
 {
 
-    public async Task<IActionResult> GetAsync(CancellationToken token)
+    //public async Task<IActionResult> GetAsync(CancellationToken token)
+    //{
+    //    var algorithm = new Algorithm("MyNewAlgorithm");
+
+    //    var newAlgorithm = await algorithmRepository.AddAsync(algorithm, token);
+
+    //    await algorithmRepository.UnitOfWork.SaveChangesAsync(token);
+
+    //    var result = new
+    //    {
+    //        algorithmUuid = algorithm.Uuid
+    //    };
+    //    return Ok(result);
+    //}
+
+    [HttpGet]
+    public async Task<IActionResult> GetAlgorithmsAsync(CancellationToken token)
     {
-        var algorithm = new Algorithm("MyNewAlgorithm");
+        var algorithms = await algorithmRepository.GetAsync(token);
 
-        var newAlgorithm = await algorithmRepository.AddAsync(algorithm, token);
-
-        await algorithmRepository.UnitOfWork.SaveChangesAsync(token);
-
-        var result = new
+        var result = algorithms.Select(algorithm => new
         {
-            algorithmUuid = algorithm.Uuid
-        };
+            uuid = algorithm.Uuid,
+            name = algorithm.Name
+        });
+
         return Ok(result);
     }
 }

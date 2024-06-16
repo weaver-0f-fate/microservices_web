@@ -5,9 +5,14 @@ export const useTestAlgorithms = () => {
     const fetch = useSecureFetch();
     
     return useCallback(
-        () : Promise<any> => 
+        () : Promise<AlgorithmResponse[]> => 
             fetch(`/algorithms`, {
                 method: 'GET',
                 nokNotification: "Get event request failed"
         }), [])
+}
+
+export interface AlgorithmResponse {
+    uuid: string;
+    name: string;
 }

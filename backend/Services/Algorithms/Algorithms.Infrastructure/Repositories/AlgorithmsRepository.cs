@@ -20,5 +20,10 @@ public class AlgorithmsRepository(WriteDatabaseContext context) : IAlgorithmsRep
     {
         return await context.Algorithms.FirstOrDefaultAsync(algorithm => algorithm.Uuid == uuid, token);
     }
+
+    public async Task<IEnumerable<Algorithm>> GetAsync(CancellationToken token)
+    {
+        return await context.Algorithms.ToListAsync(token);
+    }
 }
 
